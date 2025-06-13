@@ -49,7 +49,7 @@ export function ThemeProvider({
             setTheme(theme);
             try {
                 localStorage.setItem('theme', theme);
-            } catch (e) {
+            } catch (_) {
                 // Handle localStorage errors
             }
         },

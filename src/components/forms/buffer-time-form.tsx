@@ -2,6 +2,7 @@
 
 import { useSchedulerStore } from '@/lib/store/scheduler';
 import { Select } from '@/components/ui/select';
+import { BufferTime } from '@/lib/types/scheduler';
 
 const bufferOptions = [
     { value: 'No Buffer', label: 'No Buffer' },
@@ -19,7 +20,7 @@ export function BufferTimeForm() {
                 label="Buffer Time Between Classes"
                 options={bufferOptions}
                 value={preferences.bufferTime}
-                onChange={(e) => updateBufferTime(e.target.value as any)}
+                onChange={(e) => updateBufferTime(e.target.value as BufferTime)}
             />
             <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
                 Select how much time you want between your classes
