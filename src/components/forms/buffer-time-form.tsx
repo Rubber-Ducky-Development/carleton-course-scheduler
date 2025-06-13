@@ -22,7 +22,7 @@ export function BufferTimeForm() {
                 value={preferences.bufferTime}
                 onChange={(e) => updateBufferTime(e.target.value as BufferTime)}
             />
-            <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+            <p className="mt-1 text-sm text-contrast/70">
                 Select how much time you want between your classes
             </p>
         </div>

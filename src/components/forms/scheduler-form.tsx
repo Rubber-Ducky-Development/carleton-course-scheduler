@@ -12,7 +12,7 @@ export function SchedulerForm() {
                 <Button
                     onClick={generateSchedule}
                     size="lg"
-                    className="w-full max-w-md bg-gradient-to-r from-primary-600 to-secondary-600 font-bold hover:from-primary-700 hover:to-secondary-700"
+                    className="w-full max-w-md bg-gradient-to-r from-peach-400 to-peach-dark-400 font-bold hover:from-peach-500 hover:to-peach-dark-500"
                     disabled={isGenerating}
                 >
                     {isGenerating ? 'Generating...' : 'Generate Schedule'}

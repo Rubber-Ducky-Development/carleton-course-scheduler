@@ -36,40 +36,42 @@ export function CourseForm({ index }: CourseFormProps) {
     };
 
     return (
-        <Card onRemove={index > 0 ? () => removeCourse(index) : undefined} className="mb-4">
-            <div className="space-y-4">
-                <Input
-                    label={`Course ${index + 1}`}
-                    placeholder="Enter course code (e.g., COMP1405)"
-                    value={course.courseCode}
-                    onChange={(e) => updateCourseCode(index, e.target.value)}
-                />
+        <div className="bg-peach-100 border border-peach-300 rounded-xl shadow-md p-6 mb-6">
+            <Card onRemove={index > 0 ? () => removeCourse(index) : undefined} className="bg-peach-50 border-peach-300 shadow-sm">
+                <div className="space-y-4">
+                    <Input
+                        label={`Course ${index + 1}`}
+                        placeholder="Enter course code (e.g., COMP1405)"
+                        value={course.courseCode}
+                        onChange={(e) => updateCourseCode(index, e.target.value)}
+                    />
 
-                <Input
-                    label="Preferred Instructor"
-                    placeholder="Enter preferred instructor name"
-                    value={course.preferredInstructor}
-                    onChange={(e) => updatePreferredInstructor(index, e.target.value)}
-                />
+                    <Input
+                        label="Preferred Instructor"
+                        placeholder="Enter preferred instructor name"
+                        value={course.preferredInstructor}
+                        onChange={(e) => updatePreferredInstructor(index, e.target.value)}
+                    />
 
-                <div className="space-y-2">
-                    <p className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                        Section Type Preferences
-                    </p>
+                    <div className="space-y-2">
+                        <p className="text-sm font-medium text-contrast">
+                            Section Type Preferences
+                        </p>
 
-                    <div className="flex flex-wrap gap-4">
-                        {sectionTypes.map((type) => (
-                            <Checkbox
-                                key={type}
-                                id={`course-${index}-${type}`}
-                                label={type}
-                                checked={course.sectionTypes.includes(type)}
-                                onChange={(e) => handleSectionTypeChange(type, e.target.checked)}
-                            />
-                        ))}
+                        <div className="flex flex-wrap gap-4">
+                            {sectionTypes.map((type) => (
+                                <Checkbox
+                                    key={type}
+                                    id={`course-${index}-${type}`}
+                                    label={type}
+                                    checked={course.sectionTypes.includes(type)}
+                                    onChange={(e) => handleSectionTypeChange(type, e.target.checked)}
+                                />
+                            ))}
+                        </div>
                     </div>
                 </div>
-            </div>
-        </Card>
+            </Card>
+        </div>
     );
 }

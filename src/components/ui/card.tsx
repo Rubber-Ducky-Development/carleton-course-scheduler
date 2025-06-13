@@ -13,7 +13,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
             <div
                 ref={ref}
                 className={cn(
-                    "relative rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-800 dark:bg-gray-900",
+                    "relative rounded-lg p-4 shadow-sm",
                     className
                 )}
                 {...props}
@@ -23,7 +23,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
                         variant="ghost"
                         size="icon"
                         onClick={onRemove}
-                        className="absolute right-2 top-2 h-6 w-6 text-gray-400 hover:text-gray-500 dark:text-gray-600 dark:hover:text-gray-400"
+                        className="absolute right-2 top-2 h-6 w-6 text-peach-700 hover:text-peach-900"
                         type="button"
                     >
                         <XMarkIcon className="h-4 w-4" />

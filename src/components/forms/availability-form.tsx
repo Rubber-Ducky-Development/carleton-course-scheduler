@@ -31,11 +31,11 @@ export function AvailabilityDayForm({ day }: AvailabilityDayProps) {
     };
 
     return (
-        <div className="mb-4 rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-800">
-            <h3 className="mb-3 font-medium text-gray-900 dark:text-white">{day}</h3>
+        <div className="mb-4 rounded-lg border border-peach-800 bg-peach-700 p-4">
+            <h3 className="mb-3 font-medium text-contrast-light">{day}</h3>
 
             <div className="mb-4">
-                <div className="mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
+                <div className="mb-2 text-sm font-medium text-contrast-light">
                     Available Times
                 </div>
                 <div className="flex flex-wrap gap-4">
@@ -70,12 +70,16 @@ export function AvailabilityForm() {
     const daysOfWeek: DayOfWeek[] = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
 
     return (
-        <div className="mb-6">
-            <h2 className="mb-3 text-lg font-semibold text-gray-900 dark:text-white">Daily Availability</h2>
+        <div className="mb-6 bg-peach-100 border border-peach-300 rounded-xl shadow-md p-6">
+            <h2 className="mb-3 text-lg font-semibold text-contrast">Daily Availability</h2>
 
-            {daysOfWeek.map((day) => (
-                <AvailabilityDayForm key={day} day={day} />
-            ))}
+            <div className="space-y-6">
+                {daysOfWeek.map((day) => (
+                    <div key={day} className="rounded-lg bg-peach-50 border border-peach-300 p-4 shadow-sm">
+                        <AvailabilityDayForm day={day} />
+                    </div>
+                ))}
+            </div>
         </div>
     );
 }
