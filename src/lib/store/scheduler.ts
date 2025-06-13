@@ -7,6 +7,7 @@ import {
     SectionType,
     TimeOfDay
 } from '../types/scheduler';
+import { useScheduleStore } from './schedule';
 
 interface SchedulerState {
     preferences: SchedulerPreferences;
@@ -149,24 +150,53 @@ export const useSchedulerStore = create<SchedulerState>((set, get) => ({
                 dailyAvailability: newAvailability
             }
         };
-    }),
-
-    // Schedule Generation
+    }),    // Schedule Generation
     generateSchedule: async () => {
         set({ isGenerating: true });
 
-        // Mock API call - would be a Supabase Edge Function in production
         try {
             const prefs = get().preferences;
             console.log('Generating schedule with preferences:', prefs);
 
-            // Simulate API delay
-            await new Promise(resolve => setTimeout(resolve, 1500));
+            // We'll use our API endpoint that forwards the request to the Supabase Edge Function
+            // This way we don't have to deal with CORS issues on the client
+            const apiUrl = '/api/generate-schedule';
+            console.log('Using API URL:', apiUrl);
+            
+            const headers: HeadersInit = {
+                'Content-Type': 'application/json'
+            };
+            
+            console.log('Making API call with headers:', headers);
+            
+            const response = await fetch(apiUrl, {
+                method: 'POST',
+                headers,
+                body: JSON.stringify(prefs),
+            });
+            
+            console.log('API response status:', response.status);
+            
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(`Error ${response.status}: ${errorText}`);
+            }            const result = await response.json();
+            console.log('Schedule generated successfully:', result);
+            
+            // Update the schedule store with the generated schedule
+            useScheduleStore.getState().setSchedule(
+              result.courses,
+              !!result.demo,
+              result.message || null
+            );
+            
+            // Log the courses found
+            const coursesList = result.courses.map((c: any) => 
+                `${c.courseCode}: ${c.title} with ${c.instructor} (${c.sectionType})`
+            ).join('\n');
+            
+            console.log('Generated schedule courses:\n', coursesList);
 
-            // Simulate response processing
-            // In real app, this would send data to a Supabase Edge Function
-
-            console.log('Schedule generated successfully');
         } catch (error) {
             console.error('Failed to generate schedule:', error);
         } finally {

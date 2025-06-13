@@ -5,8 +5,10 @@ import { CourseForm } from '@/components/forms/course-form';
 import { BufferTimeForm } from '@/components/forms/buffer-time-form';
 import { AvailabilityForm } from '@/components/forms/availability-form';
 import { SchedulerForm } from '@/components/forms/scheduler-form';
+import { ScheduleDisplay } from '@/components/scheduler/schedule-display';
 import { Header } from '@/components/layout/header';
 import { useSchedulerStore } from '@/lib/store/scheduler';
+import { useScheduleStore } from '@/lib/store/schedule';
 
 export default function Home() {
   const { preferences, addCourse } = useSchedulerStore();
@@ -57,10 +59,12 @@ export default function Home() {
 
           <section className="mb-8">
             <AvailabilityForm />
+          </section>          <section>
+            <SchedulerForm />
           </section>
 
           <section>
-            <SchedulerForm />
+            <ScheduleDisplay />
           </section>
         </div>
       </main>
