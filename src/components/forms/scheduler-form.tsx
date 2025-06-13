@@ -1,26 +1,13 @@
 'use client';
 
-import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { useSchedulerStore } from '@/lib/store/scheduler';
 
 export function SchedulerForm() {
-    const { addCourse, generateSchedule, isGenerating } = useSchedulerStore();
-    const { courses } = useSchedulerStore((state) => state.preferences);
+    const { generateSchedule, isGenerating } = useSchedulerStore();
 
     return (
         <div>
-            <div className="mb-6 flex justify-center">
-                <Button
-                    onClick={addCourse}
-                    variant="outline"
-                    className="w-full max-w-md"
-                    disabled={courses.length >= 7} // Max 7 courses as per requirements
-                >
-                    Add Another Course
-                </Button>
-            </div>
-
             <div className="flex justify-center">
                 <Button
                     onClick={generateSchedule}
