@@ -2,7 +2,6 @@ import { create } from 'zustand';
 import {
     BufferTime,
     CoursePreference,
-    DailyAvailability,
     DayOfWeek,
     SchedulerPreferences,
     SectionType,
