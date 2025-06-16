@@ -183,19 +183,25 @@ export const useSchedulerStore = create<SchedulerState>((set, get) => ({
             }            const result = await response.json();
             console.log('Schedule generated successfully:', result);
             
-            // Update the schedule store with the generated schedule
+            // Update the schedule store with the generated schedule and alternatives
             useScheduleStore.getState().setSchedule(
               result.courses,
+              result.alternativeSchedules || null,
               !!result.demo,
               result.message || null
             );
             
-            // Log the courses found
+            // Log the primary schedule courses
             const coursesList = result.courses.map((c: any) => 
                 `${c.courseCode}: ${c.title} with ${c.instructor} (${c.sectionType})`
             ).join('\n');
             
             console.log('Generated schedule courses:\n', coursesList);
+            
+            // Log alternative schedules if they exist
+            if (result.alternativeSchedules && result.alternativeSchedules.length > 0) {
+                console.log(`Found ${result.alternativeSchedules.length} alternative schedules`);
+            }
 
         } catch (error) {
             console.error('Failed to generate schedule:', error);
