@@ -26,6 +26,10 @@ interface SchedulerState {
     // Availability Actions
     updateDayAvailability: (day: DayOfWeek, times: TimeOfDay[]) => void;
     updateMaxClassesPerDay: (day: DayOfWeek, max: number) => void;
+    
+    // Reset Preferences
+    resetPreferences: () => void;
+    resetAvailabilityPreferences: () => void;
 
     // Schedule Generation
     generateSchedule: () => Promise<void>;
@@ -150,7 +154,35 @@ export const useSchedulerStore = create<SchedulerState>((set, get) => ({
                 dailyAvailability: newAvailability
             }
         };
-    }),    // Schedule Generation
+    }),
+    
+    // Reset availability preferences only (keeps course preferences intact)
+    resetAvailabilityPreferences: () => {
+        // Clear any existing schedule
+        useScheduleStore.getState().clearSchedule();
+        
+        // Reset just the availability and buffer time settings
+        set((state) => ({
+            preferences: {
+                ...state.preferences,
+                bufferTime: initialPreferences.bufferTime,
+                dailyAvailability: JSON.parse(JSON.stringify(initialPreferences.dailyAvailability))
+            }
+        }));
+    },
+    
+    // Reset all preferences to default values
+    resetPreferences: () => {
+        // Clear any existing schedule
+        useScheduleStore.getState().clearSchedule();
+        
+        // Reset preferences to initial defaults
+        set({ 
+            preferences: JSON.parse(JSON.stringify(initialPreferences))
+        });
+    },
+    
+    // Schedule Generation
     generateSchedule: async () => {
         set({ isGenerating: true });
 

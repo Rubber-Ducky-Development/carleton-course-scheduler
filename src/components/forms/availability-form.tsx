@@ -5,7 +5,11 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Slider } from '@/components/ui/slider';
 import { DayOfWeek, TimeOfDay } from '@/lib/types/scheduler';
 
-const timeOfDayOptions: TimeOfDay[] = ['Morning', 'Afternoon', 'Evening'];
+const timeOfDayOptions: { value: TimeOfDay; label: string; timeFrame: string }[] = [
+    { value: 'Morning', label: 'Morning', timeFrame: '(8:00 AM - 12:00 PM)' },
+    { value: 'Afternoon', label: 'Afternoon', timeFrame: '(12:00 PM - 5:00 PM)' },
+    { value: 'Evening', label: 'Evening', timeFrame: '(5:00 PM - 10:00 PM)' }
+];
 
 interface AvailabilityDayProps {
     day: DayOfWeek;
@@ -37,15 +41,14 @@ export function AvailabilityDayForm({ day }: AvailabilityDayProps) {
             <div className="mb-4">
                 <div className="mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
                     Available Times
-                </div>
-                <div className="flex flex-wrap gap-4">
-                    {timeOfDayOptions.map((time) => (
+                </div>                <div className="flex flex-col space-y-2">
+                    {timeOfDayOptions.map((timeOption) => (
                         <Checkbox
-                            key={`${day}-${time}`}
-                            id={`${day}-${time}`}
-                            label={time}
-                            checked={dayAvailability.availableTimes.includes(time)}
-                            onChange={(e) => handleTimeChange(time, e.target.checked)}
+                            key={`${day}-${timeOption.value}`}
+                            id={`${day}-${timeOption.value}`}
+                            label={`${timeOption.label} ${timeOption.timeFrame}`}
+                            checked={dayAvailability.availableTimes.includes(timeOption.value)}
+                            onChange={(e) => handleTimeChange(timeOption.value, e.target.checked)}
                         />
                     ))}
                 </div>
@@ -68,10 +71,26 @@ export function AvailabilityDayForm({ day }: AvailabilityDayProps) {
 
 export function AvailabilityForm() {
     const daysOfWeek: DayOfWeek[] = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+    const { resetAvailabilityPreferences } = useSchedulerStore();
+
+    const handleReset = () => {
+        if (window.confirm('Reset availability preferences to default values?')) {
+            resetAvailabilityPreferences();
+        }
+    };
 
     return (
         <div className="mb-6">
-            <h2 className="mb-3 text-lg font-semibold text-gray-900 dark:text-white">Daily Availability</h2>
+            <div className="flex justify-between items-center mb-3">
+                <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Daily Availability</h2>
+                <button
+                    onClick={handleReset}
+                    className="text-xs px-2 py-1 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-md dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
+                    title="Reset only availability preferences"
+                >
+                    Reset
+                </button>
+            </div>
 
             {daysOfWeek.map((day) => (
                 <AvailabilityDayForm key={day} day={day} />
