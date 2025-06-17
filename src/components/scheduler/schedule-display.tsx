@@ -38,10 +38,9 @@ export function ScheduleDisplay() {
             ? `Alternative Schedule #${currentAlternative + 1}` 
             : 'Generated Schedule'}
         </h2>
-        
-        {/* Alternative schedule switcher */}
+          {/* Alternative schedule switcher */}
         {hasAlternatives && (
-          <div className="flex items-center space-x-2">
+          <div className="flex flex-wrap items-center gap-2">
             <Button 
               variant="outline" 
               size="sm"
