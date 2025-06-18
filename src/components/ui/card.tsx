@@ -9,11 +9,9 @@ export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
 
 const Card = React.forwardRef<HTMLDivElement, CardProps>(
     ({ className, children, onRemove, ...props }, ref) => {
-        return (
-            <div
-                ref={ref}
-                className={cn(
-                    "relative rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-800 dark:bg-gray-900",
+        return (            <div
+                ref={ref}                className={cn(
+                    "relative rounded-lg border border-gray-200 bg-white p-3 shadow-sm transition-all hover:shadow hover:border-indigo-200",
                     className
                 )}
                 {...props}

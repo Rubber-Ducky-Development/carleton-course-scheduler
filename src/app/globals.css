@@ -1,11 +1,27 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f6f8fb;
+  --foreground: #2d3748;
+  --card-background: #fbfcfd;
+  --card-border: #e8edf5;
+  --primary-color: #6366f1;
+  --primary-hover: #5551e9;
+  --accent-color: #e9e7fd;
+  --accent-hover: #e0e0ff;
+  --purple-light: #ede9fe;
+  --purple-mid: #c4b5fd;
+  --purple-dark: #8b5cf6;
+  --soft-gray: #f1f5f9;
+  --text-muted: #64748b;
+  --text-dark: #374151;
+  --shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.04), 0 1px 2px -1px rgba(0, 0, 0, 0.02);
+  --shadow-hover: 0 4px 6px -2px rgba(0, 0, 0, 0.04), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
+  --border-radius: 0.5rem;
 }
 
-@theme inline {
+/* Global theme variables */
+:root {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
@@ -14,13 +30,74 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #f4f6fa;
+    --foreground: #2d3748;
+    --card-background: #f9fafc;
+    --card-border: #e8edf5;
+    --primary-color: #6366f1;
+    --primary-hover: #5551e9;
+    --accent-color: #e9e7fd;
+    --accent-hover: #e0e0ff;
+    --purple-light: #ede9fe;
+    --purple-dark: #8b5cf6;
   }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), system-ui, -apple-system, sans-serif;
+}
+
+/* Custom styles */
+.label-indigo label {
+  color: #6366f1;
+  font-weight: 500;
+}
+
+/* Purple accents throughout the site */
+.border-purple-100 {
+  border-color: #e0e7ff;
+}
+
+.bg-purple-50 {
+  background-color: #f5f3ff;
+}
+
+/* Card with purple hover */
+.card-purple-hover:hover {
+  background-color: rgba(237, 233, 254, 0.5);
+  border-color: #ddd6fe;
+}
+
+/* Additional purple accents */
+.text-purple {
+  color: var(--purple-dark);
+}
+
+.border-purple {
+  border-color: var(--purple-mid);
+}
+
+.purple-accent {
+  background-color: var(--purple-light);
+  border-left: 3px solid var(--purple-dark);
+}
+
+.purple-highlight {
+  background-color: rgba(237, 233, 254, 0.4);
+}
+
+/* Custom form and list styles */
+.course-card {
+  transition: all 0.2s ease;
+}
+
+.course-card:hover {
+  border-color: var(--purple-mid);
+  transform: translateY(-2px);
+}
+
+.list-item-text {
+  color: var(--text-dark);
 }

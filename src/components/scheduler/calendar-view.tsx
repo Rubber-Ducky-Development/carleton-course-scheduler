@@ -317,7 +317,7 @@ export function CalendarView({ courses }: CalendarViewProps) {
   };
     return (    <div 
       ref={calendarRef}
-      className="calendar-container mt-6 rounded-md border border-gray-200 dark:border-gray-700 shadow-sm relative overflow-x-auto"
+      className="calendar-container mt-6 rounded-xl border border-gray-100 bg-[#fcfcfd] shadow-sm hover:shadow-md transition-all relative overflow-x-auto"
     >
       {/* Custom tooltip */}
       <EventTooltip 
@@ -328,9 +328,8 @@ export function CalendarView({ courses }: CalendarViewProps) {
       <div className="grid grid-cols-8 h-[600px] min-w-[768px]"> {/* Set minimum width for scrolling on mobile */}
         {/* Time axis */}
         <div className="col-span-1 border-r border-gray-200 dark:border-gray-700">
-          {/* Empty header cell */}
-          <div className="h-10 border-b border-gray-200 dark:border-gray-700 flex items-center justify-center bg-gray-50 dark:bg-gray-800">
-            <span className="text-xs font-semibold text-gray-500 dark:text-gray-400">Time</span>
+          {/* Empty header cell */}          <div className="h-10 border-b border-gray-100 flex items-center justify-center bg-gradient-to-r from-indigo-50 to-indigo-100/50">
+            <span className="text-sm font-medium text-gray-700">Time</span>
           </div>
           
           {/* Time slots */}
@@ -338,7 +337,7 @@ export function CalendarView({ courses }: CalendarViewProps) {
             {timeSlots.map((slot, index) => (
               <div 
                 key={index} 
-                className="absolute w-full border-t border-gray-200 dark:border-gray-700 flex items-start justify-center text-xs text-gray-500 dark:text-gray-400"
+                className="absolute w-full border-t border-gray-100 flex items-start justify-center text-xs text-gray-500 font-medium"
                 style={{ top: `${(index / timeSlots.length) * 100}%`, height: `${100 / timeSlots.length}%` }}
               >
                 {slot.label}
@@ -349,9 +348,8 @@ export function CalendarView({ courses }: CalendarViewProps) {
           {/* Days columns */}
         {weekDays.map((day, dayIndex) => (
           <div key={day} className="col-span-1 border-r last:border-r-0 border-gray-200 dark:border-gray-700">
-            {/* Day header */}
-            <div className="h-10 border-b border-gray-200 dark:border-gray-700 flex items-center justify-center bg-gray-50 dark:bg-gray-800">
-              <span className="text-xs font-semibold">{format(addDays(getBaseDate(), dayIndex), 'EEE', { locale: enUS })}</span>
+            {/* Day header */}            <div className="h-10 border-b border-gray-100 flex items-center justify-center bg-gradient-to-r from-indigo-50 to-indigo-100/50">
+              <span className="text-sm font-medium text-gray-700">{format(addDays(getBaseDate(), dayIndex), 'EEE', { locale: enUS })}</span>
             </div>
             
             {/* Day events container */}
@@ -360,7 +358,7 @@ export function CalendarView({ courses }: CalendarViewProps) {
               {timeSlots.map((_, index) => (
                 <div 
                   key={index}
-                  className="absolute w-full border-t border-gray-200 dark:border-gray-700"
+                  className="absolute w-full border-t border-gray-100"
                   style={{ top: `${(index / timeSlots.length) * 100}%`, height: `${100 / timeSlots.length}%` }}
                 />
               ))}{/* Events */}

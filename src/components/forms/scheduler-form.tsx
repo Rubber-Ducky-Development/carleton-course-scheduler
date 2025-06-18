@@ -8,11 +8,10 @@ export function SchedulerForm() {
 
     return (
         <div>
-            <div className="flex justify-center mb-6">
-                <Button
+            <div className="flex justify-center mb-6">                <Button
                     onClick={generateSchedule}
                     size="lg"
-                    className="w-full bg-gradient-to-r from-blue-600 to-purple-600 font-bold hover:from-blue-700 hover:to-purple-700 shadow-lg hover:shadow-xl transition-all"
+                    className="w-full md:max-w-xs bg-gradient-to-r from-indigo-600 to-violet-500 font-bold hover:from-indigo-700 hover:to-violet-600 shadow-md hover:shadow-lg transition-all rounded-xl py-6"
                     disabled={isGenerating}
                 >
                     {isGenerating ? 'Generating...' : 'Generate Schedule'}

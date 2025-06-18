@@ -22,13 +22,12 @@ export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
-}>) {
-  return (
+}>) {  return (
     <html lang="en" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <ThemeProvider defaultTheme="light">
+        <ThemeProvider defaultTheme="light" forcedTheme="light">
           {children}
         </ThemeProvider>
       </body>

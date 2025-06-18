@@ -32,16 +32,12 @@ export function AvailabilityDayForm({ day }: AvailabilityDayProps) {
         }
 
         updateDayAvailability(day, newTimes);
-    };
-
-    return (
-        <div className="mb-4 rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-800">
-            <h3 className="mb-3 font-medium text-gray-900 dark:text-white">{day}</h3>
-
-            <div className="mb-4">
-                <div className="mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
+    };    return (        <div className="mb-4 rounded-xl border border-gray-100 bg-[#fcfcfd] p-4 shadow-sm hover:shadow-md transition-all hover:border-indigo-200 course-card">
+            <h3 className="mb-2 font-medium text-indigo-700">{day}</h3>            <div className="mb-3">
+                <div className="mb-1.5 text-sm font-medium text-gray-700">
                     Available Times
-                </div>                <div className="flex flex-col space-y-2">
+                </div>
+                <div className="flex flex-col space-y-2 bg-purple-50/70 p-2.5 rounded-lg border border-purple-100/60">
                     {timeOfDayOptions.map((timeOption) => (
                         <Checkbox
                             key={`${day}-${timeOption.value}`}
@@ -56,7 +52,7 @@ export function AvailabilityDayForm({ day }: AvailabilityDayProps) {
 
             <div>
                 <Slider
-                    label="Maximum Classes Per Day"
+                    label="Maximum Classes"
                     min={0}
                     max={5}
                     step={1}
@@ -77,24 +73,20 @@ export function AvailabilityForm() {
         if (window.confirm('Reset availability preferences to default values?')) {
             resetAvailabilityPreferences();
         }
-    };
-
-    return (
-        <div className="mb-6">
-            <div className="flex justify-between items-center mb-3">
-                <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Daily Availability</h2>
+    };    return (
+        <div>            <div className="flex justify-between items-center mb-3">
                 <button
                     onClick={handleReset}
-                    className="text-xs px-2 py-1 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-md dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
+                    className="text-xs px-3 py-1.5 bg-indigo-100 hover:bg-indigo-200 text-indigo-700 rounded-lg border border-indigo-200 transition-colors"
                     title="Reset only availability preferences"
                 >
-                    Reset
+                    Reset All to Available
                 </button>
+            </div>            <div className="grid gap-3">
+                {daysOfWeek.map((day) => (
+                    <AvailabilityDayForm key={day} day={day} />
+                ))}
             </div>
-
-            {daysOfWeek.map((day) => (
-                <AvailabilityDayForm key={day} day={day} />
-            ))}
         </div>
     );
 }

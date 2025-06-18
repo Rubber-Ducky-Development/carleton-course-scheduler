@@ -14,17 +14,19 @@ const bufferOptions = [
 export function BufferTimeForm() {
     const { preferences, updateBufferTime } = useSchedulerStore();
 
-    return (
-        <div className="mb-6">
-            <Select
-                label="Buffer Time Between Classes"
-                options={bufferOptions}
-                value={preferences.bufferTime}
-                onChange={(e) => updateBufferTime(e.target.value as BufferTime)}
-            />
-            <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-                Select how much time you want between your classes
-            </p>
+    return (        <div className="mb-6">
+            <div className="p-4 rounded-xl border border-gray-100 bg-[#fcfcfc] shadow-sm hover:shadow-md transition-all hover:border-indigo-200 course-card">
+                <Select
+                    label="Buffer Time Between Classes"
+                    options={bufferOptions}
+                    value={preferences.bufferTime}
+                    onChange={(e) => updateBufferTime(e.target.value as BufferTime)}
+                    className="mb-2"
+                />
+                <p className="text-sm text-gray-600 italic">
+                    Select how much time you want between your classes
+                </p>
+            </div>
         </div>
     );
 }

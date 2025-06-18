@@ -33,13 +33,11 @@ export function CourseForm({ index }: CourseFormProps) {
         }
 
         updateSectionTypes(index, newTypes);
-    };
-
-    return (
-        <Card onRemove={index > 0 ? () => removeCourse(index) : undefined} className="mb-4">
-            <div className="space-y-4">
+    };    return (        <Card onRemove={index > 0 ? () => removeCourse(index) : undefined} className="p-4 hover:bg-purple-50/30 transition-colors course-card">
+            <div className="space-y-3">
                 <Input
                     label={`Course ${index + 1}`}
+                    className="label-indigo"
                     placeholder="Enter course code (e.g., COMP1405)"
                     value={course.courseCode}
                     onChange={(e) => updateCourseCode(index, e.target.value)}
@@ -51,13 +49,12 @@ export function CourseForm({ index }: CourseFormProps) {
                     value={course.preferredInstructor}
                     onChange={(e) => updatePreferredInstructor(index, e.target.value)}
                 />
-
-                <div className="space-y-2">
-                    <p className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                        Section Type Preferences
+                  <div>
+                    <p className="text-sm text-indigo-600 font-medium mb-2">
+                        Section Types
                     </p>
 
-                    <div className="flex flex-wrap gap-4">
+                    <div className="flex flex-wrap gap-3 bg-purple-50/70 p-3 rounded-lg border border-purple-100/60">
                         {sectionTypes.map((type) => (
                             <Checkbox
                                 key={type}
