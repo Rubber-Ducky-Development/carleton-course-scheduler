@@ -20,7 +20,7 @@ export default function Home() {
         <div className="mx-auto max-w-4xl">
           <div className="mb-8 text-center">
             <h1 className="mb-2 text-3xl font-bold text-gray-900 dark:text-white sm:text-4xl">
-              Carleton Course Scheduler
+              Termwise 🌟
             </h1>
             <p className="text-lg text-gray-600 dark:text-gray-400">
               Enter your preferences to generate an optimal schedule
@@ -71,9 +71,12 @@ export default function Home() {
 
       <footer className="border-t border-gray-200 bg-white px-4 py-6 dark:border-gray-800 dark:bg-gray-900 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-7xl text-center text-sm text-gray-500 dark:text-gray-400">
-          &copy; {new Date().getFullYear()} Course Scheduler. All rights reserved.
+          &copy; {new Date().getFullYear()} Termwise. All rights reserved.
           <br />
           Made with ❤️ by Rubber Ducky Development
+          <br />
+          <br />
+          We are not affiliated, associated, authorized, endorsed by, or in any way officially connected with Carleton University, or any of its subsidiaries or its affiliates.
         </div>
       </footer>
     </div>

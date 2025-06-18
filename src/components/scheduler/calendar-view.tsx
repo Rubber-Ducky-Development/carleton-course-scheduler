@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState, useRef } from 'react';
+import { useMemo, useState, useRef, useEffect } from 'react';
 import { format, startOfWeek, addDays } from 'date-fns';
 import { enUS } from 'date-fns/locale';
 import { ScheduleCourse } from '@/lib/store/schedule';
@@ -53,14 +53,56 @@ const EventTooltip = ({
 }) => {
   if (!visible) return null;
   
+  const tooltipRef = useRef<HTMLDivElement>(null);
+  
+  // Calculate if tooltip would go off the bottom of the viewport
+  const [tooltipStyle, setTooltipStyle] = useState<React.CSSProperties>({
+    top: `${position.y + 10}px`,
+    left: `${position.x + 10}px`,
+  });
+  
+  // Use effect to check and adjust tooltip position after render
+  useEffect(() => {
+    if (tooltipRef.current) {
+      const tooltip = tooltipRef.current;
+      const rect = tooltip.getBoundingClientRect();
+      const viewportHeight = window.innerHeight;
+      const viewportWidth = window.innerWidth;
+      
+      // Check if tooltip would go off bottom of screen
+      if (rect.bottom > viewportHeight) {
+        setTooltipStyle(prev => ({
+          ...prev,
+          top: `${position.y - rect.height - 10}px` // Position above the cursor
+        }));
+      } else {
+        setTooltipStyle(prev => ({
+          ...prev,
+          top: `${position.y + 10}px` // Default position below the cursor
+        }));
+      }
+      
+      // Check if tooltip would go off right side of screen
+      if (rect.right > viewportWidth) {
+        setTooltipStyle(prev => ({
+          ...prev,
+          left: `${position.x - rect.width - 10}px` // Position to the left of cursor
+        }));
+      } else {
+        setTooltipStyle(prev => ({
+          ...prev,
+          left: `${position.x + 10}px` // Default position to right of cursor
+        }));
+      }
+    }
+  }, [position, visible]);
+  
   return (
     <div 
+      ref={tooltipRef}
       className="absolute z-50 bg-black bg-opacity-90 text-white rounded p-3 shadow-lg text-xs max-w-xs"
-      style={{ 
-        top: `${position.y + 10}px`, 
-        left: `${position.x + 10}px`,
-      }}
-    >      <div className="tracking-wide text-sm">{event.courseCode}</div>
+      style={tooltipStyle}
+    ><div className="tracking-wide text-sm">{event.courseCode}</div>
       <div className="font-medium mt-1">{event.title}</div>
       <div className="mt-1 text-yellow-300 text-xs font-semibold">
         {/* Format the time display using military and regular time */}
@@ -211,21 +253,26 @@ export function CalendarView({ courses }: CalendarViewProps) {
     
     // Apply some visual differentiation based on section type
     const opacity = event.isRequiredSession ? '90' : 'ff'; // Slightly transparent for required sessions
-    
-    return baseColor + opacity;
+      return baseColor + opacity;
   };
     // Function to calculate event position and height
   const getEventStyle = (event: CalendarEvent) => {
     const startInMinutes = event.startHour * 60 + event.startMinute;
     const endInMinutes = event.endHour * 60 + event.endMinute;
     const dayStartInMinutes = 8 * 60; // 8 AM
+    const dayEndInMinutes = 21 * 60; // 9 PM
+    const totalDayMinutes = 13 * 60; // 13 hours displayed (8 AM to 9 PM)
     
-    // Calculate position from the top (relative to 8 AM)
-    const topPercentage = ((startInMinutes - dayStartInMinutes) / (13 * 60)) * 100;
+    // Ensure events stay within our calendar bounds
+    const clampedStartInMinutes = Math.max(startInMinutes, dayStartInMinutes);
+    const clampedEndInMinutes = Math.min(endInMinutes, dayEndInMinutes);
     
-    // Calculate height based on duration
-    const durationInMinutes = endInMinutes - startInMinutes;
-    const heightPercentage = (durationInMinutes / (13 * 60)) * 100;
+    // Calculate position from the top (relative to 8 AM) with precise positioning
+    const topPercentage = ((clampedStartInMinutes - dayStartInMinutes) / totalDayMinutes) * 100;
+    
+    // Calculate height based on exact duration
+    const durationInMinutes = clampedEndInMinutes - clampedStartInMinutes;
+    const heightPercentage = (durationInMinutes / totalDayMinutes) * 100;
     
   // Calculate size-dependent styling for dynamic text
     const duration = durationInMinutes / 60; // Duration in hours
@@ -344,14 +391,12 @@ export function CalendarView({ courses }: CalendarViewProps) {
                       <div className="font-normal tracking-wider text-center">{event.courseCode}</div>
                       
                       {/* Show time range for longer events */}
-                      {(event.endHour * 60 + event.endMinute) - (event.startHour * 60 + event.startMinute) >= 60 && (
-                        <div 
+                      {(event.endHour * 60 + event.endMinute) - (event.startHour * 60 + event.startMinute) >= 60 && (                        <div 
                           className="text-center text-white/90" 
                           style={{ 
                             fontSize: 'var(--label-size, 0.65rem)'
-                          }}
-                        >
-                          {`${event.startHour % 12 || 12}:${event.startMinute.toString().padStart(2, '0')}${event.startHour >= 12 ? 'p' : 'a'}-${event.endHour % 12 || 12}:${event.endMinute.toString().padStart(2, '0')}${event.endHour >= 12 ? 'p' : 'a'}`}
+                          }}                        >
+                          {`${event.startHour % 12 || 12}:${event.startMinute.toString().padStart(2, '0')} ${event.startHour >= 12 ? 'PM' : 'AM'} - ${event.endHour % 12 || 12}:${event.endMinute.toString().padStart(2, '0')} ${event.endHour >= 12 ? 'PM' : 'AM'}`}
                         </div>
                       )}
                       

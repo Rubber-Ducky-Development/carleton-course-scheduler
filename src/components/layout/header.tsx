@@ -1,6 +1,7 @@
 'use client';
 
 import { ThemeToggle } from '@/components/layout/theme-toggle';
+import { FeedbackDialog } from '@/components/layout/feedback-dialog';
 
 export function Header() {
     return (
@@ -12,7 +13,8 @@ export function Header() {
                     </h1>
                 </div>
 
-                <div className="flex items-center">
+                <div className="flex items-center space-x-2">
+                    <FeedbackDialog />
                     <ThemeToggle />
                 </div>
             </div>
