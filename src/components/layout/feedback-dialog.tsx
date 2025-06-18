@@ -72,12 +72,11 @@ export function FeedbackDialog() {
 
   const characterCount = feedback.length;
   const characterLimit = 3000;
-
   return (
     <>      <Button
         onClick={openModal}
-        variant="secondary"
-        className="flex items-center gap-2 px-3 py-2 text-sm"
+        variant="default"
+        className="flex items-center gap-2 px-3 py-2 text-sm bg-indigo-700 hover:bg-indigo-800 text-white"
         size="sm"
       >
         <svg 

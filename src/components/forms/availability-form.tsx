@@ -15,6 +15,7 @@ interface AvailabilityDayProps {
     day: DayOfWeek;
 }
 
+// Export the component so it can be used directly
 export function AvailabilityDayForm({ day }: AvailabilityDayProps) {
     const { preferences, updateDayAvailability, updateMaxClassesPerDay } = useSchedulerStore();
 
@@ -32,12 +33,15 @@ export function AvailabilityDayForm({ day }: AvailabilityDayProps) {
         }
 
         updateDayAvailability(day, newTimes);
-    };    return (        <div className="mb-4 rounded-xl border border-gray-100 bg-[#fcfcfd] p-4 shadow-sm hover:shadow-md transition-all hover:border-indigo-200 course-card">
-            <h3 className="mb-2 font-medium text-indigo-700">{day}</h3>            <div className="mb-3">
+    };    return (
+        <div>
+            <h3 className="mb-2 font-medium text-indigo-700 text-lg">{day}</h3>
+            
+            <div className="mb-3">
                 <div className="mb-1.5 text-sm font-medium text-gray-700">
                     Available Times
                 </div>
-                <div className="flex flex-col space-y-2 bg-purple-50/70 p-2.5 rounded-lg border border-purple-100/60">
+                <div className="flex flex-col space-y-2 bg-purple-50/70 p-3 rounded-lg border border-purple-100/60">
                     {timeOfDayOptions.map((timeOption) => (
                         <Checkbox
                             key={`${day}-${timeOption.value}`}
@@ -66,27 +70,7 @@ export function AvailabilityDayForm({ day }: AvailabilityDayProps) {
 }
 
 export function AvailabilityForm() {
-    const daysOfWeek: DayOfWeek[] = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
-    const { resetAvailabilityPreferences } = useSchedulerStore();
-
-    const handleReset = () => {
-        if (window.confirm('Reset availability preferences to default values?')) {
-            resetAvailabilityPreferences();
-        }
-    };    return (
-        <div>            <div className="flex justify-between items-center mb-3">
-                <button
-                    onClick={handleReset}
-                    className="text-xs px-3 py-1.5 bg-indigo-100 hover:bg-indigo-200 text-indigo-700 rounded-lg border border-indigo-200 transition-colors"
-                    title="Reset only availability preferences"
-                >
-                    Reset All to Available
-                </button>
-            </div>            <div className="grid gap-3">
-                {daysOfWeek.map((day) => (
-                    <AvailabilityDayForm key={day} day={day} />
-                ))}
-            </div>
-        </div>
-    );
+    // This component is now handled directly in the page layout
+    // We keep it for backwards compatibility
+    return null;
 }

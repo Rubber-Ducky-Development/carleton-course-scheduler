@@ -12,10 +12,11 @@ const bufferOptions = [
 ];
 
 export function BufferTimeForm() {
-    const { preferences, updateBufferTime } = useSchedulerStore();
-
-    return (        <div className="mb-6">
-            <div className="p-4 rounded-xl border border-gray-100 bg-[#fcfcfc] shadow-sm hover:shadow-md transition-all hover:border-indigo-200 course-card">
+    const { preferences, updateBufferTime } = useSchedulerStore();    return (
+        <div className="h-full">
+            <h3 className="mb-2 font-medium text-indigo-700 text-lg">Buffer Time</h3>
+            
+            <div>
                 <Select
                     label="Buffer Time Between Classes"
                     options={bufferOptions}

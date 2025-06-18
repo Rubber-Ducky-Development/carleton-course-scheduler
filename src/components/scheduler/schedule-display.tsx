@@ -33,9 +33,13 @@ export function ScheduleDisplay() {
   // Handle alternative selection
   const handleSelectAlternative = (index: number | null) => {
     setCurrentAlternative(index);
-  };    return (    <div className="mt-10">
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">          <h2 className="text-xl font-semibold text-indigo-800">
+  };
+
+  return (
+    <div className="mt-10">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6 bg-white p-5 rounded-lg border border-gray-200 shadow-sm">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+          <h2 className="text-xl font-semibold text-indigo-800">
             {currentAlternative !== null 
               ? `Alternative Schedule #${currentAlternative + 1}` 
               : 'Generated Schedule'}
@@ -74,11 +78,37 @@ export function ScheduleDisplay() {
               List
             </Button>
           </div>
-        </div>        {/* Alternative schedule switcher and navigation */}
+        </div>
+
+        {/* Alternative schedule switcher and navigation */}
         {hasAlternatives && (
-          <div className="w-full sm:w-auto flex flex-col sm:flex-row items-center gap-3">
+          <div className="w-full sm:w-auto flex flex-col sm:flex-row items-center gap-1">            {/* Previous button - now on the left */}
+            <Button 
+              variant="secondary" 
+              size="sm"
+              className="flex items-center justify-center w-10 h-10 rounded-md shadow-sm hover:bg-indigo-50 hover:border-indigo-300 hover:text-indigo-700 transition-colors mr-2"
+              onClick={() => {
+                // Navigate to previous schedule
+                if (currentAlternative === null) {
+                  // If on primary, go to the last alternative
+                  handleSelectAlternative(alternativeSchedules.length - 1);
+                } else if (currentAlternative === 0) {
+                  // If on first alternative, go to primary
+                  handleSelectAlternative(null);
+                } else {
+                  // Go to previous alternative
+                  handleSelectAlternative(currentAlternative - 1);
+                }
+              }}
+              title="Previous Schedule"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M15 18l-6-6 6-6" />
+              </svg>
+            </Button>
+            
             {/* Select menu for alternatives */}
-            <div className="w-full sm:w-48">
+            <div className="w-full sm:w-48 mx-2">
               <Select
                 label="View Schedule"
                 className="w-full"
@@ -100,150 +130,136 @@ export function ScheduleDisplay() {
                 ]}
               />
             </div>
-            
-            {/* Navigation buttons */}
-            <div className="flex items-center space-x-2 mt-2 sm:mt-0">
-              <Button 
-                variant="secondary" 
-                size="sm"
-                className="flex items-center justify-center w-10 h-10 rounded-md shadow-sm hover:bg-indigo-50 hover:border-indigo-300 hover:text-indigo-700 transition-colors"
-                onClick={() => {
-                  // Navigate to previous schedule
-                  if (currentAlternative === null) {
-                    // If on primary, go to the last alternative
-                    handleSelectAlternative(alternativeSchedules.length - 1);
-                  } else if (currentAlternative === 0) {
-                    // If on first alternative, go to primary
-                    handleSelectAlternative(null);
-                  } else {
-                    // Go to previous alternative
-                    handleSelectAlternative(currentAlternative - 1);
-                  }
-                }}
-                title="Previous Schedule"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M15 18l-6-6 6-6" />
-                </svg>
-              </Button>
-              
-              <Button 
-                variant="secondary" 
-                size="sm"
-                className="flex items-center justify-center w-10 h-10 rounded-md shadow-sm hover:bg-indigo-50 hover:border-indigo-300 hover:text-indigo-700 transition-colors"
-                onClick={() => {
-                  // Navigate to next schedule
-                  if (currentAlternative === null) {
-                    // If on primary, go to the first alternative
-                    handleSelectAlternative(0);
-                  } else if (currentAlternative === alternativeSchedules.length - 1) {
-                    // If on last alternative, go to primary
-                    handleSelectAlternative(null);
-                  } else {
-                    // Go to next alternative
-                    handleSelectAlternative(currentAlternative + 1);
-                  }
-                }}
-                title="Next Schedule"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M9 18l6-6-6-6" />
-                </svg>
-              </Button>
-            </div>
+              {/* Next button - stays on the right */}
+            <Button 
+              variant="secondary" 
+              size="sm"
+              className="flex items-center justify-center w-10 h-10 rounded-md shadow-sm hover:bg-indigo-50 hover:border-indigo-300 hover:text-indigo-700 transition-colors ml-2"
+              onClick={() => {
+                // Navigate to next schedule
+                if (currentAlternative === null) {
+                  // If on primary, go to the first alternative
+                  handleSelectAlternative(0);
+                } else if (currentAlternative === alternativeSchedules.length - 1) {
+                  // If on last alternative, go to primary
+                  handleSelectAlternative(null);
+                } else {
+                  // Go to next alternative
+                  handleSelectAlternative(currentAlternative + 1);
+                }
+              }}
+              title="Next Schedule"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M9 18l6-6-6-6" />
+              </svg>
+            </Button>
           </div>
         )}
-      </div>      {isDemo && (
+      </div>
+
+      {isDemo && (
         <div className="mb-4 rounded-xl bg-gradient-to-r from-indigo-50/70 to-purple-50/70 p-3 border border-indigo-100 shadow-sm">
           <p className="text-sm text-indigo-700">
             This is a demo schedule. Please enter your courses to get a personalized schedule.
           </p>
         </div>
       )}
-      
+
       {message && (
-        <div className="mb-4 rounded-xl bg-gradient-to-r from-amber-50/80 to-yellow-50/80 p-3 border border-amber-100 shadow-sm">
-          <p className="text-sm text-amber-700">
-            {message}
-          </p>
+        <div className="mb-4 rounded-xl bg-gradient-to-r from-indigo-50/70 to-purple-50/70 p-3 border border-indigo-100 shadow-sm">
+          <p className="text-sm text-indigo-700">{message}</p>
         </div>
       )}
+
       {/* Calendar View */}
-      {viewMode === 'calendar' && (
-        <CalendarView courses={displaySchedule} />
-      )}        {/* List View */}
-      {viewMode === 'list' && (
-        <div className="space-y-5">          {displaySchedule?.map((course, index) => (
-            <Card key={index} className={`p-3 ${course.isRequiredSession ? 'border-l-4 border-indigo-500 purple-highlight' : ''}`}>
-              <h3 className="text-base font-medium text-gray-900">
-                {/* Display just the title, not courseCode: title */}
-                {course.title}
-                {course.isRequiredSession && (
-                  <span className="ml-2 text-sm text-indigo-600 font-normal">
-                    Required for {course.requiredFor}
-                  </span>
-                )}
-              </h3>
-            <div className="flex flex-wrap gap-x-6 mt-1">
-              <p className="text-sm text-gray-700 list-item-text">
-                <span className="font-medium">Instructor:</span> {course.instructor}
-              </p>
-              <p className="text-sm text-gray-700 list-item-text">
-                <span className="font-medium">Section Type:</span> {course.sectionType}
-              </p>
-            </div>
-            <div className="mt-1.5">
-              <p className="text-sm font-medium text-gray-800">
-                Schedule:
-              </p>
-              <ul className="mt-0.5 space-y-0.5 text-sm text-gray-700 list-item-text">
-                {course.times.map((time, timeIndex) => (
-                  <li key={timeIndex}>
-                    {time.day}: {time.start} - {time.end} ({time.timeOfDay})
-                  </li>
-                ))}
-              </ul>
-            </div>
-            
-            {/* For backward compatibility with old nested format */}
-            {course.requiredSessions && course.requiredSessions.length > 0 && (              <div className="mt-3 pt-3 border-t border-gray-200">
-                <p className="text-sm font-medium text-gray-800">
-                  Required tutorials/labs:
-                </p>
-                <div className="mt-2 space-y-2">
-                  {course.requiredSessions.map((requiredSession, rIndex) => (                    <div key={rIndex} className="bg-indigo-50 rounded-md p-2 border-l-2 border-indigo-300">
-                      <p className="text-sm font-medium text-indigo-800">{requiredSession.title}</p>
-                      <p className="text-xs text-gray-700">
-                        Type: {requiredSession.sectionType} | Instructor: {requiredSession.instructor}
-                      </p>
-                      <ul className="mt-1 space-y-1 text-xs text-gray-700">
-                        {requiredSession.times.map((time, timeIndex) => (
-                          <li key={timeIndex}>
-                            {time.day}: {time.start} - {time.end} ({time.timeOfDay})
-                          </li>
-                        ))}
-                      </ul>
+      {viewMode === 'calendar' && displaySchedule && (
+        <div className="mt-4">
+          <CalendarView courses={displaySchedule} />
+        </div>
+      )}
+
+      {/* List View */}
+      {viewMode === 'list' && displaySchedule && (
+        <div className="mt-4 space-y-3">
+          {displaySchedule.map((course, index) => (
+            <Card key={index} className="overflow-hidden hover:shadow-md transition-shadow">
+              <div className="border-l-4" style={{ borderColor: stringToColor(course.courseCode) }}>
+                <div className="p-4">
+                  <h3 className="font-semibold text-lg text-gray-900">
+                    {course.courseCode}: {course.title}
+                  </h3>
+                  <div className="mt-2 grid grid-cols-1 md:grid-cols-2 gap-y-2 gap-x-6 text-sm">
+                    <div>
+                      <span className="text-indigo-600 font-medium">Instructor: </span>
+                      {course.instructor || 'No instructor listed'}
                     </div>
-                  ))}
+                    <div>
+                      <span className="text-indigo-600 font-medium">Type: </span>
+                      {course.sectionType || 'No type listed'}
+                    </div>
+                    <div>
+                      <span className="text-indigo-600 font-medium">Schedule: </span>
+                      {course.days?.join(', ') || 'No schedule listed'} {course.startTime} - {course.endTime}
+                    </div>
+                    <div>
+                      <span className="text-indigo-600 font-medium">Room: </span>
+                      {course.room || 'No room listed'}
+                    </div>
+                    <div className="md:col-span-2">
+                      <span className="text-indigo-600 font-medium">CRN: </span>
+                      {course.crn || 'No CRN listed'}
+                    </div>
+                  </div>
                 </div>
               </div>
-            )}
-            {course.matchReason && currentAlternative !== null && (              <div className="mt-2 text-xs text-gray-600 border-t pt-2">
-                <p>Reason: {course.matchReason}</p>
-              </div>
-            )}
-          </Card>
-        ))}
-      </div>
+            </Card>
+          ))}
+        </div>
       )}
-      
-      {hasAlternatives && currentAlternative === null && (        <div className="mt-6">
-          <p className="text-sm text-gray-600 mb-2">
+
+      {hasAlternatives && (
+        <div className="mt-6 p-4 rounded-xl bg-indigo-50/50 border border-indigo-100">
+          <p className="text-sm text-indigo-700">
             We've generated {alternativeSchedules.length} alternative schedule{alternativeSchedules.length > 1 ? 's' : ''} that might suit your preferences.
-            Use the navigation buttons above to explore them.
           </p>
         </div>
       )}
     </div>
   );
+}
+
+function stringToColor(str: string) {
+  // Extract the main course code without section parts (e.g., "MATH1007" from "MATH1007A")
+  const coursePrefix = str.match(/^[A-Z]+\d+/)?.[0] || str;
+  
+  // Create a hash of the course prefix
+  let hash = 0;
+  for (let i = 0; i < coursePrefix.length; i++) {
+    hash = coursePrefix.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  
+  // Define a palette of distinct, accessible colors
+  const colorPalette = [
+    '#3182ce', // Blue
+    '#e53e3e', // Red
+    '#38a169', // Green
+    '#805ad5', // Purple
+    '#dd6b20', // Orange
+    '#319795', // Teal
+    '#d53f8c', // Pink
+    '#718096', // Gray
+    '#d69e2e', // Yellow
+    '#2c5282', // Dark Blue
+    '#9f7aea', // Light Purple
+    '#f56565', // Light Red
+    '#48bb78', // Light Green
+    '#ed8936', // Light Orange
+    '#0694a2', // Cyan
+    '#6b46c1'  // Violet
+  ];
+  
+  // Use the hash to select a color from the palette
+  const index = Math.abs(hash) % colorPalette.length;
+  return colorPalette[index];
 }

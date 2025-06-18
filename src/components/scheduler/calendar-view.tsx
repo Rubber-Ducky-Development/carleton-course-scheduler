@@ -164,7 +164,7 @@ const getBaseDate = () => {
 const weekDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
 // Time slots from 8 AM to 9 PM
-const timeSlots = Array.from({ length: 14 }, (_, i) => {
+const timeSlots = Array.from({ length: 15 }, (_, i) => {
   const hour = i + 8;
   return {
     hour,

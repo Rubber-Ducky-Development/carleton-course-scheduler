@@ -33,7 +33,11 @@ export function CourseForm({ index }: CourseFormProps) {
         }
 
         updateSectionTypes(index, newTypes);
-    };    return (        <Card onRemove={index > 0 ? () => removeCourse(index) : undefined} className="p-4 hover:bg-purple-50/30 transition-colors course-card">
+    };    return (
+        <Card 
+            onRemove={index > 0 ? () => removeCourse(index) : undefined} 
+            className="p-4 hover:bg-purple-50/30 transition-colors course-card h-full"
+        >
             <div className="space-y-3">
                 <Input
                     label={`Course ${index + 1}`}
@@ -49,7 +53,7 @@ export function CourseForm({ index }: CourseFormProps) {
                     value={course.preferredInstructor}
                     onChange={(e) => updatePreferredInstructor(index, e.target.value)}
                 />
-                  <div>
+                <div>
                     <p className="text-sm text-indigo-600 font-medium mb-2">
                         Section Types
                     </p>
