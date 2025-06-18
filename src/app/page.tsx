@@ -1,15 +1,13 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { CourseForm } from '@/components/forms/course-form';
 import { BufferTimeForm } from '@/components/forms/buffer-time-form';
-import { AvailabilityForm, AvailabilityDayForm } from '@/components/forms/availability-form';
+import { AvailabilityDayForm } from '@/components/forms/availability-form';
 import { SchedulerForm } from '@/components/forms/scheduler-form';
 import { ScheduleDisplay } from '@/components/scheduler/schedule-display';
 import { Header } from '@/components/layout/header';
 import { useSchedulerStore } from '@/lib/store/scheduler';
-import { useScheduleStore } from '@/lib/store/schedule';
 
 export default function Home() {
   const { preferences, addCourse } = useSchedulerStore();

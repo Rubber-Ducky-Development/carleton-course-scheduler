@@ -1,9 +1,8 @@
 'use client';
 
-import { Fragment, useState } from 'react';
+import { useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 
 export function FeedbackDialog() {
   const [isOpen, setIsOpen] = useState(false);
@@ -125,9 +124,8 @@ export function FeedbackDialog() {
                     Submit Feedback
                   </Dialog.Title>
                   
-                  <div className="mt-2">
-                    <p className="text-sm text-gray-500">
-                      We appreciate your feedback! Please let us know if you've encountered any bugs or have suggestions for improvement.
+                  <div className="mt-2">                    <p className="text-sm text-gray-500">
+                      We appreciate your feedback! Please let us know if you&apos;ve encountered any bugs or have suggestions for improvement.
                     </p>
                   </div>
 

@@ -231,9 +231,8 @@ export const useSchedulerStore = create<SchedulerState>((set, get) => ({
               result.alternativeSchedules || null,
               !!result.demo,
               result.message || null
-            );
-              // Log the primary schedule courses
-            const coursesList = result.courses.map((c: any) => 
+            );              // Log the primary schedule courses
+            const coursesList = result.courses.map((c: {courseCode: string; title: string; instructor: string; sectionType: string}) => 
                 `${c.courseCode}: ${c.title} with ${c.instructor} (${c.sectionType})`
             ).join('\n');
             

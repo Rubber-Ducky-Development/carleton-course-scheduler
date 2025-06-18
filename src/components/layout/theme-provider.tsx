@@ -29,9 +29,7 @@ export function ThemeProvider({
 }: ThemeProviderProps) {
     const [theme, setTheme] = useState<Theme>(defaultTheme);
     
-    const activeTheme = forcedTheme || theme;
-
-    useEffect(() => {
+    const activeTheme = forcedTheme || theme;    useEffect(() => {
         const root = window.document.documentElement;
         root.classList.remove('light', 'dark');
 
@@ -45,7 +43,7 @@ export function ThemeProvider({
         }
 
         root.classList.add(activeTheme);
-    }, [theme]);    const value = {
+    }, [activeTheme]);const value = {
         theme: forcedTheme || theme,
         setTheme: (theme: Theme) => {
             if (forcedTheme) return; // Don't allow theme changes if forcedTheme is set

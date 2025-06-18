@@ -1,3 +1,5 @@
+
+
 import { NextRequest, NextResponse } from 'next/server';
 import { SchedulerPreferences } from '@/lib/types/scheduler';
 
@@ -77,13 +79,13 @@ export async function POST(request: NextRequest) {
       }
     );
   }
-  
-  // Log that the API endpoint was hit
+    // Log that the API endpoint was hit
   console.log('API endpoint hit: /api/generate-schedule');
-    try {
+  
+  try {
     // Parse the request body
     const preferences: SchedulerPreferences = await request.json();
-      // Basic input validation
+    // Basic input validation
     if (!preferences || typeof preferences !== 'object') {
       return NextResponse.json({ error: 'Invalid request format' }, { status: 400 });
     }
@@ -132,7 +134,9 @@ export async function POST(request: NextRequest) {
           return NextResponse.json({ error: `Invalid max classes per day` }, { status: 400 });
         }
       }
-    }// Check if we have the required environment variables
+    }
+  
+  // Check if we have the required environment variables
     if (!process.env.SUPABASE_EDGE_FUNCTION_URL || !process.env.SUPABASE_ANON_KEY || !process.env.API_KEY) {
       console.error('Missing required environment variables');
       return NextResponse.json(
@@ -146,7 +150,9 @@ export async function POST(request: NextRequest) {
           }
         }
       );
-    }    // Send the request to the Supabase Edge Function
+    }
+    
+    // Send the request to the Supabase Edge Function
     const supabaseUrl = `${process.env.SUPABASE_EDGE_FUNCTION_URL}/filter-courses`;
     console.log(`Forwarding request to Edge Function`);
     
@@ -157,12 +163,11 @@ export async function POST(request: NextRequest) {
         'Authorization': `Bearer ${process.env.SUPABASE_ANON_KEY}`,
         'x-api-key': process.env.API_KEY
       },
-      body: JSON.stringify(preferences),
-    });
+      body: JSON.stringify(preferences),    });
       // Check if the response was successful
     if (!response.ok) {
-      const errorText = await response.text();
-      console.error(`Error from Edge Function: ${response.status}`);
+      const errorResponse = await response.text();
+      console.error(`Error from Edge Function: ${response.status}`, errorResponse);
       
       // Generic error message to avoid leaking implementation details
       return NextResponse.json(
@@ -179,9 +184,8 @@ export async function POST(request: NextRequest) {
     console.log('Successfully received response from Edge Function');
     
     return NextResponse.json(data, {
-      headers: corsHeaders()
-    });
-      } catch (error) {
+      headers: corsHeaders()    });
+  } catch (error) {
     // Log full error details server-side but return generic message to client
     console.error('Error in API route:', error);
     

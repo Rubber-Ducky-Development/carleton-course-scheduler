@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+// Use local font optimization with next/font
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/layout/theme-provider";

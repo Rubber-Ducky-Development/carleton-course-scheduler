@@ -51,8 +51,7 @@ const EventTooltip = ({
   visible: boolean, 
   position: { x: number, y: number } 
 }) => {
-  if (!visible) return null;
-  
+  // Always declare hooks at the top level
   const tooltipRef = useRef<HTMLDivElement>(null);
   
   // Calculate if tooltip would go off the bottom of the viewport
@@ -96,6 +95,7 @@ const EventTooltip = ({
       }
     }
   }, [position, visible]);
+    if (!visible) return null;
   
   return (
     <div 
@@ -299,15 +299,14 @@ export function CalendarView({ courses }: CalendarViewProps) {
       top: `${topPercentage}%`,
       height: `${heightPercentage}%`,
       backgroundColor: getEventBackgroundColor(event),
-      width: '100%', // Fill the full width
-      left: '0',     // Ensure alignment from the left edge
+      width: '100%', // Fill the full width      left: '0',     // Ensure alignment from the left edge
       right: '0',    // Ensure alignment to the right edge
-      position: 'absolute' as 'absolute',
+      position: 'absolute',
       borderRadius: '4px',
       color: 'white',
       padding: isShortEvent ? '1px 2px' : '2px 3px', // Add horizontal padding for text
       overflow: 'hidden',
-      whiteSpace: 'nowrap' as 'nowrap',
+      whiteSpace: 'nowrap',
       textOverflow: 'ellipsis',
       fontSize: fontSize,
       fontWeight: 'normal', // No bold for course codes as requested
