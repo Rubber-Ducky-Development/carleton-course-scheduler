@@ -74,29 +74,83 @@ export function ScheduleDisplay() {
               List
             </Button>
           </div>
-        </div>        {/* Alternative schedule switcher - using Select instead of buttons */}
+        </div>        {/* Alternative schedule switcher and navigation */}
         {hasAlternatives && (
-          <div className="w-full sm:w-60">
-            <Select
-              label="View Schedule"
-              className="w-full"
-              value={currentAlternative === null ? 'primary' : currentAlternative.toString()}
-              onChange={(e) => {
-                const value = e.target.value;
-                if (value === 'primary') {
-                  handleSelectAlternative(null);
-                } else {
-                  handleSelectAlternative(parseInt(value));
-                }
-              }}
-              options={[
-                { value: 'primary', label: 'Primary Schedule' },
-                ...alternativeSchedules.map((_, index) => ({
-                  value: index.toString(),
-                  label: `Alternative ${index + 1}`
-                }))
-              ]}
-            />
+          <div className="w-full sm:w-auto flex flex-col sm:flex-row items-center gap-3">
+            {/* Select menu for alternatives */}
+            <div className="w-full sm:w-48">
+              <Select
+                label="View Schedule"
+                className="w-full"
+                value={currentAlternative === null ? 'primary' : currentAlternative.toString()}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  if (value === 'primary') {
+                    handleSelectAlternative(null);
+                  } else {
+                    handleSelectAlternative(parseInt(value));
+                  }
+                }}
+                options={[
+                  { value: 'primary', label: 'Primary Schedule' },
+                  ...alternativeSchedules.map((_, index) => ({
+                    value: index.toString(),
+                    label: `Alternative ${index + 1}`
+                  }))
+                ]}
+              />
+            </div>
+            
+            {/* Navigation buttons */}
+            <div className="flex items-center space-x-2 mt-2 sm:mt-0">
+              <Button 
+                variant="secondary" 
+                size="sm"
+                className="flex items-center justify-center w-10 h-10 rounded-md shadow-sm hover:bg-indigo-50 hover:border-indigo-300 hover:text-indigo-700 transition-colors"
+                onClick={() => {
+                  // Navigate to previous schedule
+                  if (currentAlternative === null) {
+                    // If on primary, go to the last alternative
+                    handleSelectAlternative(alternativeSchedules.length - 1);
+                  } else if (currentAlternative === 0) {
+                    // If on first alternative, go to primary
+                    handleSelectAlternative(null);
+                  } else {
+                    // Go to previous alternative
+                    handleSelectAlternative(currentAlternative - 1);
+                  }
+                }}
+                title="Previous Schedule"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M15 18l-6-6 6-6" />
+                </svg>
+              </Button>
+              
+              <Button 
+                variant="secondary" 
+                size="sm"
+                className="flex items-center justify-center w-10 h-10 rounded-md shadow-sm hover:bg-indigo-50 hover:border-indigo-300 hover:text-indigo-700 transition-colors"
+                onClick={() => {
+                  // Navigate to next schedule
+                  if (currentAlternative === null) {
+                    // If on primary, go to the first alternative
+                    handleSelectAlternative(0);
+                  } else if (currentAlternative === alternativeSchedules.length - 1) {
+                    // If on last alternative, go to primary
+                    handleSelectAlternative(null);
+                  } else {
+                    // Go to next alternative
+                    handleSelectAlternative(currentAlternative + 1);
+                  }
+                }}
+                title="Next Schedule"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M9 18l6-6-6-6" />
+                </svg>
+              </Button>
+            </div>
           </div>
         )}
       </div>      {isDemo && (
@@ -186,7 +240,7 @@ export function ScheduleDisplay() {
       {hasAlternatives && currentAlternative === null && (        <div className="mt-6">
           <p className="text-sm text-gray-600 mb-2">
             We've generated {alternativeSchedules.length} alternative schedule{alternativeSchedules.length > 1 ? 's' : ''} that might suit your preferences.
-            Click the dropdown above to explore them.
+            Use the navigation buttons above to explore them.
           </p>
         </div>
       )}

@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
-  },  "dependencies": {
+  },
+  "dependencies": {
     "@headlessui/react": "^2.2.4",
     "@heroicons/react": "^2.2.0",
     "class-variance-authority": "^0.7.1",
@@ -16,6 +17,7 @@
     "next": "15.3.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-hot-toast": "^2.5.2",
     "tailwind-merge": "^3.3.1",
     "zustand": "^5.0.5"
   },

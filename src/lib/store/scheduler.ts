@@ -8,6 +8,7 @@ import {
     TimeOfDay
 } from '../types/scheduler';
 import { useScheduleStore } from './schedule';
+import { toast } from 'react-hot-toast';
 
 interface SchedulerState {
     preferences: SchedulerPreferences;
@@ -181,13 +182,22 @@ export const useSchedulerStore = create<SchedulerState>((set, get) => ({
             preferences: JSON.parse(JSON.stringify(initialPreferences))
         });
     },
-    
-    // Schedule Generation
+      // Schedule Generation
     generateSchedule: async () => {
+        const prefs = get().preferences;
+        
+        // Check if any courses have been entered
+        const hasValidCourses = prefs.courses.some(course => course.courseCode?.trim().length > 0);
+        
+        if (!hasValidCourses) {
+            // Import dynamically to avoid SSR issues
+            toast.error("Please enter at least one course before generating a schedule.");
+            return;
+        }
+        
         set({ isGenerating: true });
 
         try {
-            const prefs = get().preferences;
             console.log('Generating schedule with preferences:', prefs);
 
             // We'll use our API endpoint that forwards the request to the Supabase Edge Function
@@ -222,21 +232,24 @@ export const useSchedulerStore = create<SchedulerState>((set, get) => ({
               !!result.demo,
               result.message || null
             );
-            
-            // Log the primary schedule courses
+              // Log the primary schedule courses
             const coursesList = result.courses.map((c: any) => 
                 `${c.courseCode}: ${c.title} with ${c.instructor} (${c.sectionType})`
             ).join('\n');
             
             console.log('Generated schedule courses:\n', coursesList);
             
+            // Show success toast
+            toast.success("Schedule generated successfully!");
+            
             // Log alternative schedules if they exist
             if (result.alternativeSchedules && result.alternativeSchedules.length > 0) {
                 console.log(`Found ${result.alternativeSchedules.length} alternative schedules`);
-            }
-
-        } catch (error) {
+            }        } catch (error) {
             console.error('Failed to generate schedule:', error);
+            
+            // Show error toast
+            toast.error("Failed to generate schedule. Please try again.");
         } finally {
             set({ isGenerating: false });
         }
