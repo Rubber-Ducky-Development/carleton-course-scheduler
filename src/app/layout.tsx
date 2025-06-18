@@ -16,8 +16,22 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Course Scheduler",
-  description: "A mobile-responsive course scheduler application",
+  title: "Termwise | Carleton Course Scheduler",
+  description: "Termwise is a course scheduler built for Carleton students that automatically creates your perfect timetable based on your preferences. Just input your courses and time constraints, and let Termwise handle the rest.",  icons: {
+    icon: './favicon.ico',
+  },
+  openGraph: {
+    title: "Termwise | Carleton Course Scheduler",
+    description: "Termwise is a course scheduler built for Carleton students that automatically creates your perfect timetable based on your preferences. Just input your courses and time constraints, and let Termwise handle the rest.",
+    images: [{ url: './favicon.ico', width: 32, height: 32 }],
+    type: "website",
+  },
+  twitter: {
+    card: "summary",
+    title: "Termwise | Carleton Course Scheduler",
+    description: "Termwise is a course scheduler built for Carleton students that automatically creates your perfect timetable based on your preferences. Just input your courses and time constraints, and let Termwise handle the rest.",
+    images: ['./favicon.ico'],
+  },
 };
 
 export default function RootLayout({
