@@ -3,7 +3,9 @@
 import { useState } from 'react';
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Select } from "@/components/ui/select";
 import { useScheduleStore } from "@/lib/store/schedule";
+import { CalendarView } from './calendar-view';
 
 export function ScheduleDisplay() {
   const { 
@@ -15,6 +17,9 @@ export function ScheduleDisplay() {
     setCurrentAlternative,
     getCurrentSchedule 
   } = useScheduleStore();
+  
+  // Toggle between calendar and list view
+  const [viewMode, setViewMode] = useState<'calendar' | 'list'>('calendar');
   
   if (!generatedSchedule) {
     return null;
@@ -28,39 +33,72 @@ export function ScheduleDisplay() {
   // Handle alternative selection
   const handleSelectAlternative = (index: number | null) => {
     setCurrentAlternative(index);
-  };
-  
-  return (
+  };    return (
     <div className="mt-8">
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-          {currentAlternative !== null 
-            ? `Alternative Schedule #${currentAlternative + 1}` 
-            : 'Generated Schedule'}
-        </h2>
-          {/* Alternative schedule switcher */}
-        {hasAlternatives && (
-          <div className="flex flex-wrap items-center gap-2">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+            {currentAlternative !== null 
+              ? `Alternative Schedule #${currentAlternative + 1}` 
+              : 'Generated Schedule'}
+          </h2>
+          
+          {/* View mode buttons in a contained button group */}
+          <div className="inline-flex rounded-md shadow-sm" role="group">
             <Button 
-              variant="outline" 
+              variant={viewMode === 'calendar' ? 'default' : 'outline'} 
               size="sm"
-              className={!currentAlternative ? 'bg-primary-100 dark:bg-primary-900' : ''}
-              onClick={() => handleSelectAlternative(null)}
+              onClick={() => setViewMode('calendar')}
+              className={`flex items-center rounded-r-none ${viewMode === 'calendar' ? 'border-r-0' : ''}`}
             >
-              Primary
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-1">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>
+              Calendar
             </Button>
-            
-            {alternativeSchedules.map((_, index) => (
-              <Button
-                key={index}
-                variant="outline"
-                size="sm"
-                className={currentAlternative === index ? 'bg-primary-100 dark:bg-primary-900' : ''}
-                onClick={() => handleSelectAlternative(index)}
-              >
-                {index + 1}
-              </Button>
-            ))}
+            <Button 
+              variant={viewMode === 'list' ? 'default' : 'outline'} 
+              size="sm"
+              onClick={() => setViewMode('list')}
+              className={`flex items-center rounded-l-none`}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-1">
+                <line x1="8" y1="6" x2="21" y2="6"></line>
+                <line x1="8" y1="12" x2="21" y2="12"></line>
+                <line x1="8" y1="18" x2="21" y2="18"></line>
+                <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                <line x1="3" y1="18" x2="3.01" y2="18"></line>
+              </svg>
+              List
+            </Button>
+          </div>
+        </div>        {/* Alternative schedule switcher - using Select instead of buttons */}
+        {hasAlternatives && (
+          <div className="w-full sm:w-60">
+            <Select
+              label="View Schedule"
+              className="w-full"
+              value={currentAlternative === null ? 'primary' : currentAlternative.toString()}
+              onChange={(e) => {
+                const value = e.target.value;
+                if (value === 'primary') {
+                  handleSelectAlternative(null);
+                } else {
+                  handleSelectAlternative(parseInt(value));
+                }
+              }}
+              options={[
+                { value: 'primary', label: 'Primary Schedule' },
+                ...alternativeSchedules.map((_, index) => ({
+                  value: index.toString(),
+                  label: `Alternative ${index + 1}`
+                }))
+              ]}
+            />
           </div>
         )}
       </div>
@@ -79,20 +117,26 @@ export function ScheduleDisplay() {
             {message}
           </p>
         </div>
+      )}      
+      {/* Calendar View */}
+      {viewMode === 'calendar' && (
+        <CalendarView courses={displaySchedule} />
       )}
       
-      <div className="space-y-4">
-        {displaySchedule?.map((course, index) => (
-          <Card key={index} className={`p-4 ${course.isRequiredSession ? 'border-l-4 border-blue-500' : ''}`}>
-            <h3 className="text-lg font-medium text-gray-900 dark:text-white">
-              {/* Display just the title, not courseCode: title */}
-              {course.title}
-              {course.isRequiredSession && (
-                <span className="ml-2 text-sm text-blue-500 font-normal">
-                  Required for {course.requiredFor}
-                </span>
-              )}
-            </h3>
+      {/* List View */}
+      {viewMode === 'list' && (
+        <div className="space-y-4">
+          {displaySchedule?.map((course, index) => (
+            <Card key={index} className={`p-4 ${course.isRequiredSession ? 'border-l-4 border-blue-500' : ''}`}>
+              <h3 className="text-lg font-medium text-gray-900 dark:text-white">
+                {/* Display just the title, not courseCode: title */}
+                {course.title}
+                {course.isRequiredSession && (
+                  <span className="ml-2 text-sm text-blue-500 font-normal">
+                    Required for {course.requiredFor}
+                  </span>
+                )}
+              </h3>
             <p className="text-gray-600 dark:text-gray-400">
               Instructor: {course.instructor}
             </p>
@@ -145,6 +189,7 @@ export function ScheduleDisplay() {
           </Card>
         ))}
       </div>
+      )}
       
       {hasAlternatives && currentAlternative === null && (
         <div className="mt-6">
