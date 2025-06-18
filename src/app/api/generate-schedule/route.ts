@@ -13,12 +13,11 @@ export async function POST(request: NextRequest) {
     // Parse the request body
     const preferences: SchedulerPreferences = await request.json();
     console.log('Received preferences:', JSON.stringify(preferences, null, 2));
-    
-    // Check if we have the required environment variables
-    if (!process.env.NEXT_PUBLIC_SUPABASE_EDGE_FUNCTION_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
-      console.error('Missing required Supabase environment variables');
+      // Check if we have the required environment variables
+    if (!process.env.NEXT_PUBLIC_SUPABASE_EDGE_FUNCTION_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || !process.env.API_KEY) {
+      console.error('Missing required environment variables');
       return NextResponse.json(
-        { error: 'Server configuration error - Missing Supabase configuration' },
+        { error: 'Server configuration error - Missing required configuration' },
         { 
           status: 500,
           headers: {
@@ -29,16 +28,25 @@ export async function POST(request: NextRequest) {
         }
       );
     }
-    
-    // Send the request to the Supabase Edge Function
+      // Send the request to the Supabase Edge Function
     const supabaseUrl = `${process.env.NEXT_PUBLIC_SUPABASE_EDGE_FUNCTION_URL}/filter-courses`;
     console.log(`Forwarding request to Supabase Edge Function: ${supabaseUrl}`);
+    
+    // Check if API_KEY is available
+    if (!process.env.API_KEY) {
+      console.error('Missing API_KEY environment variable');
+      return NextResponse.json(
+        { error: 'Server configuration error - Missing API_KEY' },
+        { status: 500 }
+      );
+    }
     
     const response = await fetch(supabaseUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY}`
+        'Authorization': `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY}`,
+        'x-api-key': process.env.API_KEY
       },
       body: JSON.stringify(preferences),
     });
