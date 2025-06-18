@@ -7,6 +7,8 @@ import {
     SectionType,
     TimeOfDay
 } from '../types/scheduler';
+import { useScheduleStore } from './schedule';
+import { toast } from 'react-hot-toast';
 
 interface SchedulerState {
     preferences: SchedulerPreferences;
@@ -25,6 +27,10 @@ interface SchedulerState {
     // Availability Actions
     updateDayAvailability: (day: DayOfWeek, times: TimeOfDay[]) => void;
     updateMaxClassesPerDay: (day: DayOfWeek, max: number) => void;
+    
+    // Reset Preferences
+    resetPreferences: () => void;
+    resetAvailabilityPreferences: () => void;
 
     // Schedule Generation
     generateSchedule: () => Promise<void>;
@@ -150,25 +156,100 @@ export const useSchedulerStore = create<SchedulerState>((set, get) => ({
             }
         };
     }),
-
-    // Schedule Generation
+    
+    // Reset availability preferences only (keeps course preferences intact)
+    resetAvailabilityPreferences: () => {
+        // Clear any existing schedule
+        useScheduleStore.getState().clearSchedule();
+        
+        // Reset just the availability and buffer time settings
+        set((state) => ({
+            preferences: {
+                ...state.preferences,
+                bufferTime: initialPreferences.bufferTime,
+                dailyAvailability: JSON.parse(JSON.stringify(initialPreferences.dailyAvailability))
+            }
+        }));
+    },
+    
+    // Reset all preferences to default values
+    resetPreferences: () => {
+        // Clear any existing schedule
+        useScheduleStore.getState().clearSchedule();
+        
+        // Reset preferences to initial defaults
+        set({ 
+            preferences: JSON.parse(JSON.stringify(initialPreferences))
+        });
+    },
+      // Schedule Generation
     generateSchedule: async () => {
+        const prefs = get().preferences;
+        
+        // Check if any courses have been entered
+        const hasValidCourses = prefs.courses.some(course => course.courseCode?.trim().length > 0);
+        
+        if (!hasValidCourses) {
+            // Import dynamically to avoid SSR issues
+            toast.error("Please enter at least one course before generating a schedule.");
+            return;
+        }
+        
         set({ isGenerating: true });
 
-        // Mock API call - would be a Supabase Edge Function in production
         try {
-            const prefs = get().preferences;
             console.log('Generating schedule with preferences:', prefs);
 
-            // Simulate API delay
-            await new Promise(resolve => setTimeout(resolve, 1500));
-
-            // Simulate response processing
-            // In real app, this would send data to a Supabase Edge Function
-
-            console.log('Schedule generated successfully');
-        } catch (error) {
+            // We'll use our API endpoint that forwards the request to the Supabase Edge Function
+            // This way we don't have to deal with CORS issues on the client
+            const apiUrl = '/api/generate-schedule';
+            console.log('Using API URL:', apiUrl);
+            
+            const headers: HeadersInit = {
+                'Content-Type': 'application/json'
+            };
+            
+            console.log('Making API call with headers:', headers);
+            
+            const response = await fetch(apiUrl, {
+                method: 'POST',
+                headers,
+                body: JSON.stringify(prefs),
+            });
+            
+            console.log('API response status:', response.status);
+            
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(`Error ${response.status}: ${errorText}`);
+            }            const result = await response.json();
+            console.log('Schedule generated successfully:', result);
+            
+            // Update the schedule store with the generated schedule and alternatives
+            useScheduleStore.getState().setSchedule(
+              result.courses,
+              result.alternativeSchedules || null,
+              !!result.demo,
+              result.message || null
+            );
+              // Log the primary schedule courses
+            const coursesList = result.courses.map((c: any) => 
+                `${c.courseCode}: ${c.title} with ${c.instructor} (${c.sectionType})`
+            ).join('\n');
+            
+            console.log('Generated schedule courses:\n', coursesList);
+            
+            // Show success toast
+            toast.success("Schedule generated successfully!");
+            
+            // Log alternative schedules if they exist
+            if (result.alternativeSchedules && result.alternativeSchedules.length > 0) {
+                console.log(`Found ${result.alternativeSchedules.length} alternative schedules`);
+            }        } catch (error) {
             console.error('Failed to generate schedule:', error);
+            
+            // Show error toast
+            toast.error("Failed to generate schedule. Please try again.");
         } finally {
             set({ isGenerating: false });
         }

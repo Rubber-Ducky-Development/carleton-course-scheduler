@@ -5,12 +5,17 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Slider } from '@/components/ui/slider';
 import { DayOfWeek, TimeOfDay } from '@/lib/types/scheduler';
 
-const timeOfDayOptions: TimeOfDay[] = ['Morning', 'Afternoon', 'Evening'];
+const timeOfDayOptions: { value: TimeOfDay; label: string; timeFrame: string }[] = [
+    { value: 'Morning', label: 'Morning', timeFrame: '(8:00 AM - 12:00 PM)' },
+    { value: 'Afternoon', label: 'Afternoon', timeFrame: '(12:00 PM - 5:00 PM)' },
+    { value: 'Evening', label: 'Evening', timeFrame: '(5:00 PM - 10:00 PM)' }
+];
 
 interface AvailabilityDayProps {
     day: DayOfWeek;
 }
 
+// Export the component so it can be used directly
 export function AvailabilityDayForm({ day }: AvailabilityDayProps) {
     const { preferences, updateDayAvailability, updateMaxClassesPerDay } = useSchedulerStore();
 
@@ -28,24 +33,22 @@ export function AvailabilityDayForm({ day }: AvailabilityDayProps) {
         }
 
         updateDayAvailability(day, newTimes);
-    };
-
-    return (
-        <div className="mb-4 rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-800">
-            <h3 className="mb-3 font-medium text-gray-900 dark:text-white">{day}</h3>
-
-            <div className="mb-4">
-                <div className="mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
+    };    return (
+        <div>
+            <h3 className="mb-2 font-medium text-indigo-700 text-lg">{day}</h3>
+            
+            <div className="mb-3">
+                <div className="mb-1.5 text-sm font-medium text-gray-700">
                     Available Times
                 </div>
-                <div className="flex flex-wrap gap-4">
-                    {timeOfDayOptions.map((time) => (
+                <div className="flex flex-col space-y-2 bg-purple-50/70 p-3 rounded-lg border border-purple-100/60">
+                    {timeOfDayOptions.map((timeOption) => (
                         <Checkbox
-                            key={`${day}-${time}`}
-                            id={`${day}-${time}`}
-                            label={time}
-                            checked={dayAvailability.availableTimes.includes(time)}
-                            onChange={(e) => handleTimeChange(time, e.target.checked)}
+                            key={`${day}-${timeOption.value}`}
+                            id={`${day}-${timeOption.value}`}
+                            label={`${timeOption.label} ${timeOption.timeFrame}`}
+                            checked={dayAvailability.availableTimes.includes(timeOption.value)}
+                            onChange={(e) => handleTimeChange(timeOption.value, e.target.checked)}
                         />
                     ))}
                 </div>
@@ -53,7 +56,7 @@ export function AvailabilityDayForm({ day }: AvailabilityDayProps) {
 
             <div>
                 <Slider
-                    label="Maximum Classes Per Day"
+                    label="Maximum Classes"
                     min={0}
                     max={5}
                     step={1}
@@ -67,15 +70,7 @@ export function AvailabilityDayForm({ day }: AvailabilityDayProps) {
 }
 
 export function AvailabilityForm() {
-    const daysOfWeek: DayOfWeek[] = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
-
-    return (
-        <div className="mb-6">
-            <h2 className="mb-3 text-lg font-semibold text-gray-900 dark:text-white">Daily Availability</h2>
-
-            {daysOfWeek.map((day) => (
-                <AvailabilityDayForm key={day} day={day} />
-            ))}
-        </div>
-    );
+    // This component is now handled directly in the page layout
+    // We keep it for backwards compatibility
+    return null;
 }

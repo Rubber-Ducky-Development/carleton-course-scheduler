@@ -14,12 +14,11 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
                     <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
                         {label}
                     </label>
-                )}
-                <input
+                )}                <input
                     type={type}
                     className={cn(
-                        "flex h-10 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-0 disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-50 dark:placeholder-gray-400",
-                        error && "border-red-500 focus:ring-red-500",
+                        "flex h-10 w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:border-indigo-300 focus:ring-2 focus:ring-indigo-100 focus:ring-offset-0 transition-all disabled:cursor-not-allowed disabled:opacity-50",
+                        error && "border-red-500 focus:ring-red-100 focus:border-red-400",
                         className
                     )}
                     ref={ref}

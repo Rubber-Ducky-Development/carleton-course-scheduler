@@ -4,20 +4,16 @@ import { Button } from '@/components/ui/button';
 import { useSchedulerStore } from '@/lib/store/scheduler';
 
 export function SchedulerForm() {
-    const { generateSchedule, isGenerating } = useSchedulerStore();
-
-    return (
+    const { generateSchedule, isGenerating } = useSchedulerStore();    return (
         <div>
-            <div className="flex justify-center">
-                <Button
-                    onClick={generateSchedule}
-                    size="lg"
-                    className="w-full max-w-md bg-gradient-to-r from-primary-600 to-secondary-600 font-bold hover:from-primary-700 hover:to-secondary-700"
-                    disabled={isGenerating}
-                >
-                    {isGenerating ? 'Generating...' : 'Generate Schedule'}
-                </Button>
-            </div>
+            <Button
+                onClick={generateSchedule}
+                size="lg"
+                className="w-full bg-gradient-to-r from-indigo-600 to-violet-500 font-bold hover:from-indigo-700 hover:to-violet-600 shadow-md hover:shadow-lg transition-all rounded-xl py-6"
+                disabled={isGenerating}
+            >
+                {isGenerating ? 'Generating...' : 'Generate Schedule'}
+            </Button>
         </div>
     );
 }

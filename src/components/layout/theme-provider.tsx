@@ -7,6 +7,7 @@ type Theme = 'light' | 'dark' | 'system';
 type ThemeProviderProps = {
     children: React.ReactNode;
     defaultTheme?: Theme;
+    forcedTheme?: Theme;
 };
 
 type ThemeProviderState = {
@@ -24,14 +25,17 @@ const ThemeProviderContext = createContext<ThemeProviderState>(initialState);
 export function ThemeProvider({
     children,
     defaultTheme = 'light',
+    forcedTheme,
 }: ThemeProviderProps) {
     const [theme, setTheme] = useState<Theme>(defaultTheme);
+    
+    const activeTheme = forcedTheme || theme;
 
     useEffect(() => {
         const root = window.document.documentElement;
         root.classList.remove('light', 'dark');
 
-        if (theme === 'system') {
+        if (activeTheme === 'system') {
             const systemTheme = window.matchMedia('(prefers-color-scheme: dark)')
                 .matches
                 ? 'dark'
@@ -40,12 +44,11 @@ export function ThemeProvider({
             return;
         }
 
-        root.classList.add(theme);
-    }, [theme]);
-
-    const value = {
-        theme,
+        root.classList.add(activeTheme);
+    }, [theme]);    const value = {
+        theme: forcedTheme || theme,
         setTheme: (theme: Theme) => {
+            if (forcedTheme) return; // Don't allow theme changes if forcedTheme is set
             setTheme(theme);
             try {
                 localStorage.setItem('theme', theme);
