@@ -197,18 +197,22 @@ export function ScheduleDisplay() {
                     <div>
                       <span className="text-indigo-600 font-medium">Type: </span>
                       {course.sectionType || 'No type listed'}
-                    </div>
-                    <div>
+                    </div>                    <div>
                       <span className="text-indigo-600 font-medium">Schedule: </span>
-                      {course.days?.join(', ') || 'No schedule listed'} {course.startTime} - {course.endTime}
+                      {course.times.map((time, idx) => (
+                        <span key={idx}>
+                          {idx > 0 && ", "}
+                          {time.day} {time.start} - {time.end}
+                        </span>
+                      ))}
                     </div>
                     <div>
-                      <span className="text-indigo-600 font-medium">Room: </span>
-                      {course.room || 'No room listed'}
+                      <span className="text-indigo-600 font-medium">Time of Day: </span>
+                      {course.times.map(t => t.timeOfDay).filter((v, i, a) => a.indexOf(v) === i).join(', ')}
                     </div>
                     <div className="md:col-span-2">
-                      <span className="text-indigo-600 font-medium">CRN: </span>
-                      {course.crn || 'No CRN listed'}
+                      <span className="text-indigo-600 font-medium">Match Reason: </span>
+                      {course.matchReason || 'Primary selection'}
                     </div>
                   </div>
                 </div>

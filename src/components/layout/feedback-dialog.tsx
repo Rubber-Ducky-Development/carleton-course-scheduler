@@ -71,12 +71,11 @@ export function FeedbackDialog() {
   };
 
   const characterCount = feedback.length;
-  const characterLimit = 3000;
-  return (
+  const characterLimit = 3000;  return (
     <>      <Button
         onClick={openModal}
-        variant="default"
-        className="flex items-center gap-2 px-3 py-2 text-sm bg-indigo-700 hover:bg-indigo-800 text-white"
+        variant="secondary"
+        className="flex items-center gap-2 px-3 py-2 text-sm bg-gray-400 hover:bg-gray-500 text-white"
         size="sm"
       >
         <svg 
@@ -96,10 +95,8 @@ export function FeedbackDialog() {
         Submit Feedback
       </Button>
 
-      <Transition appear show={isOpen} as={Fragment}>
-        <Dialog as="div" className="relative z-50" onClose={closeModal}>
-          <Transition.Child
-            as={Fragment}
+      <Transition appear show={isOpen}>
+        <Dialog as="div" className="relative z-50" onClose={closeModal}>          <Transition.Child
             enter="ease-out duration-300"
             enterFrom="opacity-0"
             enterTo="opacity-100"
@@ -113,7 +110,6 @@ export function FeedbackDialog() {
           <div className="fixed inset-0 overflow-y-auto">
             <div className="flex min-h-full items-center justify-center p-4 text-center">
               <Transition.Child
-                as={Fragment}
                 enter="ease-out duration-300"
                 enterFrom="opacity-0 scale-95"
                 enterTo="opacity-100 scale-100"
@@ -121,16 +117,16 @@ export function FeedbackDialog() {
                 leaveFrom="opacity-100 scale-100"
                 leaveTo="opacity-0 scale-95"
               >
-                <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-lg bg-white dark:bg-gray-900 p-6 text-left align-middle shadow-xl transition-all">
+                <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-lg bg-white p-6 text-left align-middle shadow-xl transition-all">
                   <Dialog.Title
                     as="h3"
-                    className="text-lg font-medium leading-6 text-gray-900 dark:text-white"
+                    className="text-lg font-medium leading-6 text-gray-900"
                   >
                     Submit Feedback
                   </Dialog.Title>
                   
                   <div className="mt-2">
-                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                    <p className="text-sm text-gray-500">
                       We appreciate your feedback! Please let us know if you've encountered any bugs or have suggestions for improvement.
                     </p>
                   </div>
@@ -142,12 +138,12 @@ export function FeedbackDialog() {
                           value={feedback}
                           onChange={(e) => setFeedback(e.target.value)}
                           placeholder="Enter your feedback here..."
-                          className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-0 disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-50 dark:placeholder-gray-400 min-h-[150px]"
+                          className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-0 disabled:cursor-not-allowed disabled:opacity-50 min-h-[150px]"
                           maxLength={characterLimit}
                           disabled={isSubmitting}
                         />
                         <div className="mt-1 flex justify-end">
-                          <span className={`text-xs ${characterCount > characterLimit ? 'text-red-500' : 'text-gray-500 dark:text-gray-400'}`}>
+                          <span className={`text-xs ${characterCount > characterLimit ? 'text-red-500' : 'text-gray-500'}`}>
                             {characterCount}/{characterLimit}
                           </span>
                         </div>
