@@ -131,8 +131,14 @@ const EventTooltip = ({
 
 // Convert time string (e.g., "8:30 AM") to hours and minutes
 const parseTimeString = (timeStr: string) => {
-  const [time, period] = timeStr.split(' ');
+  // Handle any whitespace issues in the time string
+  const cleanTimeStr = timeStr.trim();
+  const [time, period] = cleanTimeStr.split(' ');
   let [hours, minutes] = time.split(':').map(num => parseInt(num, 10));
+  
+  // Ensure we have valid numbers
+  hours = isNaN(hours) ? 0 : hours;
+  minutes = isNaN(minutes) ? 0 : minutes;
   
   if (period === 'PM' && hours !== 12) {
     hours += 12;
@@ -163,12 +169,16 @@ const getBaseDate = () => {
 // Week days array
 const weekDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
-// Time slots from 8 AM to 9 PM
-const timeSlots = Array.from({ length: 15 }, (_, i) => {
-  const hour = i + 8;
+// Time slots from 8 AM to 10 PM with half hour precision
+const timeSlots = Array.from({ length: 29 }, (_, i) => {
+  const halfHourIncrement = i / 2;
+  const hour = Math.floor(8 + halfHourIncrement);
+  const minutes = (i % 2) * 30;
+  
   return {
     hour,
-    label: `${hour > 12 ? hour - 12 : hour}:00 ${hour >= 12 ? 'PM' : 'AM'}`
+    minutes,
+    label: `${hour > 12 ? hour - 12 : hour}:${minutes === 0 ? '00' : minutes} ${hour >= 12 ? 'PM' : 'AM'}`
   };
 });
 
@@ -254,27 +264,27 @@ export function CalendarView({ courses }: CalendarViewProps) {
     // Apply some visual differentiation based on section type
     const opacity = event.isRequiredSession ? '90' : 'ff'; // Slightly transparent for required sessions
       return baseColor + opacity;
-  };
-    // Function to calculate event position and height
+  };  // Function to calculate event position and height
   const getEventStyle = (event: CalendarEvent) => {
+    // Convert event time to minutes since midnight
     const startInMinutes = event.startHour * 60 + event.startMinute;
     const endInMinutes = event.endHour * 60 + event.endMinute;
-    const dayStartInMinutes = 8 * 60; // 8 AM
-    const dayEndInMinutes = 21 * 60; // 9 PM
-    const totalDayMinutes = 13 * 60; // 13 hours displayed (8 AM to 9 PM)
+      // Define our calendar's time boundaries
+    const dayStartInMinutes = 8 * 60; // Calendar starts at 8 AM
+    const dayEndInMinutes = 22 * 60 + 30;  // Calendar ends at 10:30 PM to ensure we show full 10 PM hour
+    const totalDayMinutes = dayEndInMinutes - dayStartInMinutes; // Total minutes displayed on calendar
     
     // Ensure events stay within our calendar bounds
     const clampedStartInMinutes = Math.max(startInMinutes, dayStartInMinutes);
-    const clampedEndInMinutes = Math.min(endInMinutes, dayEndInMinutes);
-    
-    // Calculate position from the top (relative to 8 AM) with precise positioning
+    const clampedEndInMinutes = Math.min(endInMinutes, dayEndInMinutes);    // Calculate position from the top with precise positioning
+    // We don't need to apply a correction anymore - using the actual time should be accurate
     const topPercentage = ((clampedStartInMinutes - dayStartInMinutes) / totalDayMinutes) * 100;
-    
+      
     // Calculate height based on exact duration
     const durationInMinutes = clampedEndInMinutes - clampedStartInMinutes;
     const heightPercentage = (durationInMinutes / totalDayMinutes) * 100;
     
-  // Calculate size-dependent styling for dynamic text
+    // Calculate size-dependent styling for dynamic text
     const duration = durationInMinutes / 60; // Duration in hours
     const isShortEvent = duration < 1.0; // Events under 1 hour are considered short
     const isVeryShortEvent = duration < 0.5; // Events under 30 minutes are very short
@@ -304,7 +314,6 @@ export function CalendarView({ courses }: CalendarViewProps) {
       cursor: 'pointer',
       boxShadow: '0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)',
       transition: 'all 0.2s cubic-bezier(.25,.8,.25,1)',
-      // No border as requested
       // Improve text readability with text shadow
       textShadow: '0px 1px 2px rgba(0,0,0,0.7)',
       // Pass custom properties to be used in the component
@@ -332,15 +341,14 @@ export function CalendarView({ courses }: CalendarViewProps) {
             <span className="text-sm font-medium text-gray-700">Time</span>
           </div>
           
-          {/* Time slots */}
-          <div className="relative h-[calc(100%-2.5rem)]">
+          {/* Time slots */}          <div className="relative h-[calc(100%-2.5rem)]">
             {timeSlots.map((slot, index) => (
               <div 
                 key={index} 
-                className="absolute w-full border-t border-gray-100 flex items-start justify-center text-xs text-gray-500 font-medium"
+                className={`absolute w-full border-t ${slot.minutes === 0 ? 'border-gray-200' : 'border-gray-100'} flex items-start justify-center text-xs text-gray-500 font-medium`}
                 style={{ top: `${(index / timeSlots.length) * 100}%`, height: `${100 / timeSlots.length}%` }}
               >
-                {slot.label}
+                {slot.minutes === 0 ? slot.label : ''}
               </div>
             ))}
           </div>
@@ -353,12 +361,11 @@ export function CalendarView({ courses }: CalendarViewProps) {
             </div>
             
             {/* Day events container */}
-            <div className="relative h-[calc(100%-2.5rem)] overflow-hidden">
-              {/* Time grid lines */}
-              {timeSlots.map((_, index) => (
+            <div className="relative h-[calc(100%-2.5rem)] overflow-hidden">              {/* Time grid lines */}
+              {timeSlots.map((slot, index) => (
                 <div 
                   key={index}
-                  className="absolute w-full border-t border-gray-100"
+                  className={`absolute w-full border-t ${slot.minutes === 0 ? 'border-gray-200' : 'border-gray-100'}`}
                   style={{ top: `${(index / timeSlots.length) * 100}%`, height: `${100 / timeSlots.length}%` }}
                 />
               ))}{/* Events */}

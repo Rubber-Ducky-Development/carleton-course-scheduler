@@ -130,7 +130,7 @@ export default function Home() {
         <div className="mx-auto max-w-3xl text-center text-sm text-gray-500">
           &copy; {new Date().getFullYear()} Termwise. All rights reserved.
           <br />
-          <span className="text-indigo-500">Made with ❤️ by Rubber Ducky Development</span>
+          <span className="text-indigo-500">Made with ❤️ by <a href="https://github.com/Rubber-Ducky-Development" className="hover:text-indigo-700" target="_blank" rel="noopener noreferrer">Rubber Ducky Development</a></span>
           <br />
           <span className="text-xs text-gray-400 mt-2 block">We are not affiliated, associated, authorized, endorsed by, or in any way officially connected with Carleton University, or any of its subsidiaries or its affiliates.</span>
         </div>
