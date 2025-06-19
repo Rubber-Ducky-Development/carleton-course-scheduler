@@ -40,11 +40,11 @@ const Slider = React.forwardRef<HTMLInputElement, SliderProps>(
             <div className="w-full">
                 {label && (
                     <div className="flex items-center justify-between">
-                        <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
+                        <label className="mb-1 block text-sm font-medium text-gray-700">
                             {label}
                         </label>
                         {showValue && (
-                            <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                            <span className="text-sm font-medium text-gray-700">
                                 {displayValue}
                             </span>
                         )}
@@ -59,10 +59,10 @@ const Slider = React.forwardRef<HTMLInputElement, SliderProps>(
                     value={value}
                     onChange={handleChange}
                     className={cn(
-                        "h-2 w-full cursor-pointer appearance-none rounded-lg bg-gray-200 dark:bg-gray-700",
+                        "h-2 w-full cursor-pointer appearance-none rounded-lg bg-gray-200",
                         "appearance-none",
-                        "[&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-blue-600 [&::-webkit-slider-thumb]:dark:bg-blue-500 [&::-webkit-slider-thumb]:shadow-md",
-                        "[&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-blue-600 [&::-moz-range-thumb]:dark:bg-blue-500 [&::-moz-range-thumb]:border-none",
+                        "[&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-blue-600 [&::-webkit-slider-thumb]:shadow-md",
+                        "[&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-blue-600 [&::-moz-range-thumb]:border-none",
                         "focus:outline-none focus:ring-0",
                         className
                     )}

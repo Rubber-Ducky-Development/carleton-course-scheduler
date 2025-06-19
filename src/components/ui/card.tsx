@@ -21,7 +21,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
                         variant="ghost"
                         size="icon"
                         onClick={onRemove}
-                        className="absolute right-2 top-2 h-6 w-6 text-gray-400 hover:text-gray-500 dark:text-gray-600 dark:hover:text-gray-400"
+                        className="absolute right-2 top-2 h-6 w-6 text-gray-400 hover:text-gray-500"
                         type="button"
                     >
                         <XMarkIcon className="h-4 w-4" />

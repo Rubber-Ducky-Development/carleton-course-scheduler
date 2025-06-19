@@ -20,27 +20,10 @@
   --border-radius: 0.5rem;
 }
 
-/* Global theme variables */
+/* Global variables */
 :root {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #f4f6fa;
-    --foreground: #2d3748;
-    --card-background: #f9fafc;
-    --card-border: #e8edf5;
-    --primary-color: #6366f1;
-    --primary-hover: #5551e9;
-    --accent-color: #e9e7fd;
-    --accent-hover: #e0e0ff;
-    --purple-light: #ede9fe;
-    --purple-dark: #8b5cf6;
-  }
 }
 
 body {

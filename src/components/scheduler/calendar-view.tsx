@@ -335,7 +335,7 @@ export function CalendarView({ courses }: CalendarViewProps) {
       />
       <div className="grid grid-cols-8 h-[600px] min-w-[768px]"> {/* Set minimum width for scrolling on mobile */}
         {/* Time axis */}
-        <div className="col-span-1 border-r border-gray-200 dark:border-gray-700">
+        <div className="col-span-1 border-r border-gray-200">
           {/* Empty header cell */}          <div className="h-10 border-b border-gray-100 flex items-center justify-center bg-gradient-to-r from-indigo-50 to-indigo-100/50">
             <span className="text-sm font-medium text-gray-700">Time</span>
           </div>
@@ -354,7 +354,7 @@ export function CalendarView({ courses }: CalendarViewProps) {
         </div>
           {/* Days columns */}
         {weekDays.map((day, dayIndex) => (
-          <div key={day} className="col-span-1 border-r last:border-r-0 border-gray-200 dark:border-gray-700">
+          <div key={day} className="col-span-1 border-r last:border-r-0 border-gray-200">
             {/* Day header */}            <div className="h-10 border-b border-gray-100 flex items-center justify-center bg-gradient-to-r from-indigo-50 to-indigo-100/50">
               <span className="text-sm font-medium text-gray-700">{format(addDays(getBaseDate(), dayIndex), 'EEE', { locale: enUS })}</span>
             </div>
