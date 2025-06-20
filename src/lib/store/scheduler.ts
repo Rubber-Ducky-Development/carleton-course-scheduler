@@ -180,9 +180,8 @@ export const useSchedulerStore = create<SchedulerState>((set, get) => ({
         // Reset preferences to initial defaults
         set({ 
             preferences: JSON.parse(JSON.stringify(initialPreferences))
-        });
-    },
-      // Schedule Generation
+        });    },
+    // Schedule Generation
     generateSchedule: async () => {
         const prefs = get().preferences;
         
@@ -194,14 +193,44 @@ export const useSchedulerStore = create<SchedulerState>((set, get) => ({
             toast.error("Please enter at least one course before generating a schedule.");
             return;
         }
+          // Check for empty course cards
+        const hasEmptyCourses = prefs.courses.some(course => !course.courseCode?.trim());
+        
+        if (hasEmptyCourses) {
+            toast.error("Please enter a course code for all course cards or remove empty ones.");
+            return;
+        }
         
         set({ isGenerating: true });
 
         try {
-            console.log('Generating schedule with preferences:', prefs);
-
-            // We'll use our API endpoint that forwards the request to the Supabase Edge Function
-            // This way we don't have to deal with CORS issues on the client
+            console.log('Generating schedule with preferences:', prefs);            // First, validate courses exist before sending to the Edge Function
+            const validateUrl = '/api/validate-courses';
+            console.log('Validating courses first at:', validateUrl);
+            console.log('Courses to validate:', prefs.courses.map(c => c.courseCode).join(', '));
+            
+            const validationResult = await fetch(validateUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ courses: prefs.courses }),
+            });
+              if (!validationResult.ok) {
+                const errorData = await validationResult.json();
+                toast.error(errorData.error || "Failed to validate courses");
+                set({ isGenerating: false });
+                return;
+            }
+            
+            const validation = await validationResult.json();
+            console.log('Validation response:', validation);
+            
+            if (validation.invalidCourses && validation.invalidCourses.length > 0) {
+                toast.error(validation.message || `The following courses were not found: ${validation.invalidCourses.join(', ')}`);
+                set({ isGenerating: false });
+                return;
+            }
+            
+            // Proceed with schedule generation if validation passes
             const apiUrl = '/api/generate-schedule';
             console.log('Using API URL:', apiUrl);
             

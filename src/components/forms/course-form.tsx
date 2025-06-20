@@ -38,13 +38,12 @@ export function CourseForm({ index }: CourseFormProps) {
             onRemove={index > 0 ? () => removeCourse(index) : undefined} 
             className="p-4 hover:bg-purple-50/30 transition-colors course-card h-full"
         >
-            <div className="space-y-3">
-                <Input
+            <div className="space-y-3">                <Input
                     label={`Course ${index + 1}`}
                     className="label-indigo"
                     placeholder="Enter course code (e.g., COMP1405)"
                     value={course.courseCode}
-                    onChange={(e) => updateCourseCode(index, e.target.value)}
+                    onChange={(e) => updateCourseCode(index, e.target.value.toUpperCase().replace(/\s+/g, ''))}
                 />
 
                 <Input
