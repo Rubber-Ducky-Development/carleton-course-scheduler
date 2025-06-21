@@ -40,13 +40,12 @@ interface SchedulerState {
 // Initialize with default preferences
 const initialPreferences: SchedulerPreferences = {
     courses: [{ courseCode: '', preferredInstructor: '', sectionTypes: [] }],
-    bufferTime: 'No preference',
-    dailyAvailability: [
-        { day: 'Monday', availableTimes: ['Morning', 'Afternoon', 'Evening'], maxClassesPerDay: 3 },
-        { day: 'Tuesday', availableTimes: ['Morning', 'Afternoon', 'Evening'], maxClassesPerDay: 3 },
-        { day: 'Wednesday', availableTimes: ['Morning', 'Afternoon', 'Evening'], maxClassesPerDay: 3 },
-        { day: 'Thursday', availableTimes: ['Morning', 'Afternoon', 'Evening'], maxClassesPerDay: 3 },
-        { day: 'Friday', availableTimes: ['Morning', 'Afternoon', 'Evening'], maxClassesPerDay: 3 },
+    bufferTime: 'No preference',      dailyAvailability: [
+        { day: 'Monday', availableTimes: ['Morning', 'Afternoon', 'Evening'], maxClassesPerDay: 7 },
+        { day: 'Tuesday', availableTimes: ['Morning', 'Afternoon', 'Evening'], maxClassesPerDay: 7 },
+        { day: 'Wednesday', availableTimes: ['Morning', 'Afternoon', 'Evening'], maxClassesPerDay: 7 },
+        { day: 'Thursday', availableTimes: ['Morning', 'Afternoon', 'Evening'], maxClassesPerDay: 7 },
+        { day: 'Friday', availableTimes: ['Morning', 'Afternoon', 'Evening'], maxClassesPerDay: 7 },
     ],
 };
 

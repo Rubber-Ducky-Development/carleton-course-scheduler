@@ -61,14 +61,13 @@ export default function Home() {
               <span className="inline-block bg-indigo-100 text-indigo-800 py-0.5 px-2 rounded-md mr-2 text-sm">2</span>
               Availability & Schedule Preferences
             </h2>
-            
-            <div className="flex justify-between items-center mb-3">
+              <div className="flex justify-end items-center mb-3">
               <button
                 onClick={() => useSchedulerStore.getState().resetAvailabilityPreferences()}
                 className="text-xs px-3 py-1.5 bg-indigo-100 hover:bg-indigo-200 text-indigo-700 rounded-lg border border-indigo-200 transition-colors"
                 title="Reset only availability preferences"
               >
-                Reset All to Available
+                Reset preferences
               </button>
             </div>
             

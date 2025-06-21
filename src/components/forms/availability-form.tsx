@@ -52,13 +52,11 @@ export function AvailabilityDayForm({ day }: AvailabilityDayProps) {
                         />
                     ))}
                 </div>
-            </div>
-
-            <div>
+            </div>            <div>
                 <Slider
                     label="Maximum Classes"
                     min={0}
-                    max={5}
+                    max={7}
                     step={1}
                     value={dayAvailability.maxClassesPerDay}
                     onChange={(e) => updateMaxClassesPerDay(day, Number(e.target.value))}
