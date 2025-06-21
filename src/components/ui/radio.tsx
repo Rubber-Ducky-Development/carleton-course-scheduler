@@ -48,7 +48,7 @@ export interface RadioGroupProps {
 const RadioGroup = React.forwardRef<HTMLDivElement, RadioGroupProps>(
   ({ className, options, value, name, onChange, direction = 'vertical', label, ...props }, ref) => {
     return (
-      <div className="w-full" ref={ref} {...props}>
+      <div className={cn("w-full", className)} ref={ref} {...props}>
         {label && (
           <label className="mb-1 block text-sm font-medium text-gray-700">
             {label}

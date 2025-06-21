@@ -78,15 +78,17 @@ export function ScheduleDisplay() {
               List
             </Button>
           </div>
-        </div>
-
-        {/* Alternative schedule switcher and navigation */}
+        </div>        {/* Alternative schedule switcher and navigation */}
         {hasAlternatives && (
-          <div className="w-full sm:w-auto flex flex-col sm:flex-row items-center gap-1">            {/* Previous button - now on the left */}
+          <div className="w-full sm:w-auto flex flex-col sm:flex-row items-center gap-1">
+            {/* On desktop: Previous - Select - Next */}
+            {/* On mobile: Select menu on top, Previous & Next buttons below */}
+            
+            {/* Previous button - hidden on mobile, visible on desktop */}
             <Button 
               variant="secondary" 
               size="sm"
-              className="flex items-center justify-center w-10 h-10 rounded-md shadow-sm hover:bg-indigo-50 hover:border-indigo-300 hover:text-indigo-700 transition-colors mr-2"
+              className="hidden sm:flex items-center justify-center w-10 h-10 rounded-md shadow-sm hover:bg-indigo-50 hover:border-indigo-300 hover:text-indigo-700 transition-colors mr-2"
               onClick={() => {
                 // Navigate to previous schedule
                 if (currentAlternative === null) {
@@ -108,7 +110,7 @@ export function ScheduleDisplay() {
             </Button>
             
             {/* Select menu for alternatives */}
-            <div className="w-full sm:w-48 mx-2">
+            <div className="w-full sm:w-48 mb-2 sm:mb-0 sm:mx-0">
               <Select
                 label="View Schedule"
                 className="w-full"
@@ -130,11 +132,12 @@ export function ScheduleDisplay() {
                 ]}
               />
             </div>
-              {/* Next button - stays on the right */}
+            
+            {/* Next button - hidden on mobile, visible on desktop */}
             <Button 
               variant="secondary" 
               size="sm"
-              className="flex items-center justify-center w-10 h-10 rounded-md shadow-sm hover:bg-indigo-50 hover:border-indigo-300 hover:text-indigo-700 transition-colors ml-2"
+              className="hidden sm:flex items-center justify-center w-10 h-10 rounded-md shadow-sm hover:bg-indigo-50 hover:border-indigo-300 hover:text-indigo-700 transition-colors ml-2"
               onClick={() => {
                 // Navigate to next schedule
                 if (currentAlternative === null) {
@@ -154,6 +157,51 @@ export function ScheduleDisplay() {
                 <path d="M9 18l6-6-6-6" />
               </svg>
             </Button>
+            
+            {/* Mobile only buttons - horizontal layout below select menu */}
+            <div className="flex sm:hidden flex-row justify-center w-full space-x-4 mt-1">
+              {/* Mobile Previous button */}
+              <Button 
+                variant="secondary" 
+                size="sm"
+                className="flex items-center justify-center w-10 h-10 rounded-md shadow-sm hover:bg-indigo-50 hover:border-indigo-300 hover:text-indigo-700 transition-colors"
+                onClick={() => {
+                  if (currentAlternative === null) {
+                    handleSelectAlternative(alternativeSchedules.length - 1);
+                  } else if (currentAlternative === 0) {
+                    handleSelectAlternative(null);
+                  } else {
+                    handleSelectAlternative(currentAlternative - 1);
+                  }
+                }}
+                title="Previous Schedule"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M15 18l-6-6 6-6" />
+                </svg>
+              </Button>
+              
+              {/* Mobile Next button */}
+              <Button 
+                variant="secondary" 
+                size="sm"
+                className="flex items-center justify-center w-10 h-10 rounded-md shadow-sm hover:bg-indigo-50 hover:border-indigo-300 hover:text-indigo-700 transition-colors"
+                onClick={() => {
+                  if (currentAlternative === null) {
+                    handleSelectAlternative(0);
+                  } else if (currentAlternative === alternativeSchedules.length - 1) {
+                    handleSelectAlternative(null);
+                  } else {
+                    handleSelectAlternative(currentAlternative + 1);
+                  }
+                }}
+                title="Next Schedule"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M9 18l6-6-6-6" />
+                </svg>
+              </Button>
+            </div>
           </div>
         )}
       </div>

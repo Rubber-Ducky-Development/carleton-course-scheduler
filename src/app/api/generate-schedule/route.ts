@@ -107,11 +107,10 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ error: 'Invalid section types' }, { status: 400 });
       }
     }
-    
-    // Validate buffer time if provided
+      // Validate buffer time if provided
     if (preferences.bufferTime && 
-        !['No Buffer', '30 Minutes', '1 Hour', '1+ Hours'].includes(preferences.bufferTime)) {
-      return NextResponse.json({ error: 'Invalid buffer time' }, { status: 400 });
+        !['No Buffer', '30 Minutes', '1 Hour', '1+ Hours', 'No preference', '30m', '1h', '1h+'].includes(preferences.bufferTime)) {
+      return NextResponse.json({ error: `Invalid buffer time: ${preferences.bufferTime}` }, { status: 400 });
     }
     
     // Validate availability data if provided

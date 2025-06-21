@@ -43,7 +43,8 @@ export function CourseForm({ index }: CourseFormProps) {
                     className="label-indigo"
                     placeholder="Enter course code (e.g., COMP1405)"
                     value={course.courseCode}
-                    onChange={(e) => updateCourseCode(index, e.target.value.toUpperCase().replace(/\s+/g, ''))}
+                    onChange={(e) => updateCourseCode(index, e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '').substring(0, 15))}
+                    maxLength={15}
                 />
 
                 <Input
