@@ -40,7 +40,7 @@ interface SchedulerState {
 // Initialize with default preferences
 const initialPreferences: SchedulerPreferences = {
     courses: [{ courseCode: '', preferredInstructor: '', sectionTypes: [] }],
-    bufferTime: 'No Buffer',
+    bufferTime: 'No preference',
     dailyAvailability: [
         { day: 'Monday', availableTimes: ['Morning', 'Afternoon', 'Evening'], maxClassesPerDay: 3 },
         { day: 'Tuesday', availableTimes: ['Morning', 'Afternoon', 'Evening'], maxClassesPerDay: 3 },

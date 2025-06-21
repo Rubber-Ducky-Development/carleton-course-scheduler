@@ -5,10 +5,10 @@ import { BufferTime } from '@/lib/types/scheduler';
 import { RadioGroup } from '@/components/ui/radio';
 
 const bufferOptions = [
-    { value: 'No Buffer', label: 'No Buffer' },
-    { value: '30 Minutes', label: '30 Minutes' },
-    { value: '1 Hour', label: '1 Hour' },
-    { value: '1+ Hours', label: '1+ Hours' },
+    { value: 'No preference', label: 'No preference' },
+    { value: '30m', label: '30 minutes' },
+    { value: '1h', label: '1 hour' },
+    { value: '1h+', label: '1+ hours' },
 ];
 
 export function BufferTimeForm() {

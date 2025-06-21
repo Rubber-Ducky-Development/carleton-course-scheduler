@@ -112,7 +112,7 @@ export default function Home() {
             <div className="flex items-center justify-center p-4">
               <div className="w-full max-w-md">
                 <p className="text-center mb-4 text-gray-600">
-                  Click below to generate your optimal schedule based on your preferences
+                  Click below to generate your optimal schedule based on your preferences and allow up to 10 seconds!
                 </p>
                 <SchedulerForm />
               </div>
