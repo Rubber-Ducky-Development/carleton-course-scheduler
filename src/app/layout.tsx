@@ -17,20 +17,21 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Termwise | Carleton Course Scheduler",
-  description: "Termwise is a course scheduler built for Carleton students that automatically creates your perfect timetable based on your preferences. Just input your courses and time constraints, and let Termwise handle the rest.",  icons: {
+  description: "Termwise is a course scheduler built for Carleton students that automatically creates your perfect timetable based on your preferences. Just input your courses and time constraints, and let Termwise handle the rest.",  
+  icons: {
     icon: './favicon.ico',
   },
   openGraph: {
     title: "Termwise | Carleton Course Scheduler",
     description: "Termwise is a course scheduler built for Carleton students that automatically creates your perfect timetable based on your preferences. Just input your courses and time constraints, and let Termwise handle the rest.",
-    images: [{ url: './favicon.ico', width: 32, height: 32 }],
+    images: [{ url: '/og-duck.png', width: 800, height: 800, alt: "Yellow rubber duck" }],
     type: "website",
   },
   twitter: {
-    card: "summary",
+    card: "summary_large_image",
     title: "Termwise | Carleton Course Scheduler",
     description: "Termwise is a course scheduler built for Carleton students that automatically creates your perfect timetable based on your preferences. Just input your courses and time constraints, and let Termwise handle the rest.",
-    images: ['./favicon.ico'],
+    images: ['/og-duck.png'],
   },
 };
 

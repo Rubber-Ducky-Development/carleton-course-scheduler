@@ -1,14 +1,13 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Select } from "@/components/ui/select";
 import { useScheduleStore } from "@/lib/store/schedule";
 import { CalendarView } from './calendar-view';
 
-export function ScheduleDisplay() {
-  const { 
+export function ScheduleDisplay() {  const { 
     generatedSchedule, 
     alternativeSchedules, 
     isDemo, 
@@ -20,6 +19,24 @@ export function ScheduleDisplay() {
   
   // Toggle between calendar and list view
   const [viewMode, setViewMode] = useState<'calendar' | 'list'>('calendar');
+  
+  // Detect mobile device for appropriate instructions
+  const [isMobile, setIsMobile] = useState(false);
+  
+  useEffect(() => {
+    const checkIfMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    
+    // Initial check
+    checkIfMobile();
+    
+    // Add event listener for window resize
+    window.addEventListener('resize', checkIfMobile);
+    
+    // Cleanup
+    return () => window.removeEventListener('resize', checkIfMobile);
+  }, []);
   
   if (!generatedSchedule) {
     return null;
@@ -37,9 +54,7 @@ export function ScheduleDisplay() {
 
   return (
     <div className="mt-10">
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6 bg-white p-5 rounded-lg border border-gray-200 shadow-sm">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-          <h2 className="text-xl font-semibold text-indigo-800">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6 bg-white p-5 rounded-lg border border-gray-200 shadow-sm">        <div className="flex flex-col items-start gap-2">          <h2 className="text-xl font-semibold text-indigo-800">
             {currentAlternative !== null 
               ? `Alternative Schedule #${currentAlternative + 1}` 
               : 'Generated Schedule'}
@@ -212,11 +227,16 @@ export function ScheduleDisplay() {
             This is a demo schedule. Please enter your courses to get a personalized schedule.
           </p>
         </div>
-      )}
-
-      {message && (
+      )}      {message && (
         <div className="mb-4 rounded-xl bg-gradient-to-r from-indigo-50/70 to-purple-50/70 p-3 border border-indigo-100 shadow-sm">
-          <p className="text-sm text-indigo-700">{message}</p>
+          <p className="text-sm text-indigo-700 flex flex-wrap items-center justify-between gap-2">
+            <span>{message}</span>
+            <span className="text-xs">
+              {isMobile 
+                ? "Tap on courses to see details" 
+                : "Hover over courses to see details"}
+            </span>
+          </p>
         </div>
       )}
 
@@ -233,9 +253,10 @@ export function ScheduleDisplay() {
           {displaySchedule.map((course, index) => (
             <Card key={index} className="overflow-hidden hover:shadow-md transition-shadow">
               <div className="border-l-4" style={{ borderColor: stringToColor(course.courseCode) }}>
-                <div className="p-4">
-                  <h3 className="font-semibold text-lg text-gray-900">
-                    {course.courseCode}: {course.title}
+                <div className="p-4">                  <h3 className="font-semibold text-lg text-gray-900">
+                    {course.courseCode}: {course.title.startsWith(course.courseCode) ? 
+                      course.title.substring(course.courseCode.length).trim().replace(/^:?\s*/, '') : 
+                      course.title}
                   </h3>
                   <div className="mt-2 grid grid-cols-1 md:grid-cols-2 gap-y-2 gap-x-6 text-sm">
                     <div>
@@ -268,10 +289,9 @@ export function ScheduleDisplay() {
             </Card>
           ))}
         </div>
-      )}
-
-      {hasAlternatives && (
-        <div className="mt-6 p-4 rounded-xl bg-indigo-50/50 border border-indigo-100">          <p className="text-sm text-indigo-700">
+      )}      {hasAlternatives && (
+        <div className="mt-6 p-4 rounded-xl bg-indigo-50/50 border border-indigo-100">          
+          <p className="text-sm text-indigo-700">
             We&apos;ve generated {alternativeSchedules.length} alternative schedule{alternativeSchedules.length > 1 ? 's' : ''} that might suit your preferences.
           </p>
         </div>

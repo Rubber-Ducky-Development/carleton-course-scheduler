@@ -251,28 +251,29 @@ export const useSchedulerStore = create<SchedulerState>((set, get) => ({
                 const errorText = await response.text();
                 throw new Error(`Error ${response.status}: ${errorText}`);
             }            const result = await response.json();
-            console.log('Schedule generated successfully:', result);
-            
-            // Update the schedule store with the generated schedule and alternatives
+            console.log('Schedule generated successfully:', result);            // Update the schedule store with the generated schedule and alternatives
             useScheduleStore.getState().setSchedule(
               result.courses,
               result.alternativeSchedules || null,
               !!result.demo,
               result.message || null
-            );              // Log the primary schedule courses
+            );// Log the primary schedule courses
             const coursesList = result.courses.map((c: {courseCode: string; title: string; instructor: string; sectionType: string}) => 
                 `${c.courseCode}: ${c.title} with ${c.instructor} (${c.sectionType})`
             ).join('\n');
             
             console.log('Generated schedule courses:\n', coursesList);
-            
-            // Show success toast
-            toast.success("Schedule generated successfully!");
+              // Show success toast with hint about viewing more details
+            toast.success(
+                window.innerWidth <= 768 
+                ? "Schedule generated! Tap on courses in the calendar to see more details." 
+                : "Schedule generated! Hover over courses in the calendar to see more details."
+            );
             
             // Log alternative schedules if they exist
             if (result.alternativeSchedules && result.alternativeSchedules.length > 0) {
                 console.log(`Found ${result.alternativeSchedules.length} alternative schedules`);
-            }        } catch (error) {
+            }} catch (error) {
             console.error('Failed to generate schedule:', error);
             
             // Show error toast

@@ -14,26 +14,29 @@ function stringToColor(str: string) {
   let hash = 0;
   for (let i = 0; i < coursePrefix.length; i++) {
     hash = coursePrefix.charCodeAt(i) + ((hash << 5) - hash);
-  }
-  
-  // Define a palette of distinct, accessible colors
+  }  // Academic-focused color palette with professional, distinct hues - slightly brightened
   const colorPalette = [
-    '#3182ce', // Blue
-    '#e53e3e', // Red
-    '#38a169', // Green
-    '#805ad5', // Purple
-    '#dd6b20', // Orange
-    '#319795', // Teal
-    '#d53f8c', // Pink
-    '#718096', // Gray
-    '#d69e2e', // Yellow
-    '#2c5282', // Dark Blue
-    '#9f7aea', // Light Purple
-    '#f56565', // Light Red
-    '#48bb78', // Light Green
-    '#ed8936', // Light Orange
-    '#0694a2', // Cyan
-    '#6b46c1'  // Violet
+    '#1976D2', // Brightened Oxford Blue
+    '#C0392B', // Brightened Harvard Crimson
+    '#27AE60', // Brightened Dartmouth Green
+    '#8E44AD', // Brightened Princeton Purple
+    '#D4752C', // Brightened Amber Brown
+    '#16A085', // Brightened Collegiate Teal
+    '#A04000', // Brightened Mahogany
+    '#7045FF', // Brightened Royal Blue
+    '#2E8B57', // Brightened Dark Evergreen
+    '#B03A2E', // Brightened Cornell Red
+    '#2980B9', // Brightened Yale Blue
+    '#6C3483', // Brightened Deep Plum
+    '#16A085', // Brightened Forest Green
+    '#9A7D0A', // Brightened Bronze
+    '#6C3483', // Brightened Deep Indigo
+    '#34495E', // Brightened Dark Slate
+    '#922B21', // Brightened Burgundy
+    '#1E8449', // Brightened British Racing Green
+    '#9C640C', // Brightened Chocolate Brown
+    '#4A6EA9', // Brightened Charcoal Blue
+    '#1A5276'  // Brightened Navy Blue
   ];
   
   // Use the hash to select a color from the palette
@@ -59,40 +62,54 @@ const EventTooltip = ({
     top: `${position.y + 10}px`,
     left: `${position.x + 10}px`,
   });
-  
-  // Use effect to check and adjust tooltip position after render
+    // Use effect to check and adjust tooltip position after render
   useEffect(() => {
     if (tooltipRef.current) {
       const tooltip = tooltipRef.current;
       const rect = tooltip.getBoundingClientRect();
       const viewportHeight = window.innerHeight;
       const viewportWidth = window.innerWidth;
+      const calendarRect = tooltipRef.current.closest('.calendar-container')?.getBoundingClientRect() || {
+        top: 0,
+        bottom: viewportHeight,
+        left: 0,
+        right: viewportWidth
+      };
       
-      // Check if tooltip would go off bottom of screen
-      if (rect.bottom > viewportHeight) {
-        setTooltipStyle(prev => ({
-          ...prev,
-          top: `${position.y - rect.height - 10}px` // Position above the cursor
-        }));
-      } else {
-        setTooltipStyle(prev => ({
-          ...prev,
-          top: `${position.y + 10}px` // Default position below the cursor
-        }));
+      // Get available space in different directions
+      const spaceBelow = viewportHeight - position.y;
+      const spaceAbove = position.y - calendarRect.top;
+      const spaceRight = viewportWidth - position.x;
+      const spaceLeft = position.x - calendarRect.left;
+      
+      // Default positions
+      let topPos = position.y + 10;
+      let leftPos = position.x + 10;
+      
+      // Adjust vertical position
+      if (spaceBelow < rect.height + 20 && spaceAbove > rect.height + 20) {
+        // Not enough space below but enough above - show above
+        topPos = position.y - rect.height - 10;
+      } else if (spaceBelow < rect.height + 20) {
+        // Not enough space below or above - center as much as possible
+        topPos = Math.max(calendarRect.top + 5, viewportHeight - rect.height - 5 - calendarRect.top);
       }
       
-      // Check if tooltip would go off right side of screen
-      if (rect.right > viewportWidth) {
-        setTooltipStyle(prev => ({
-          ...prev,
-          left: `${position.x - rect.width - 10}px` // Position to the left of cursor
-        }));
-      } else {
-        setTooltipStyle(prev => ({
-          ...prev,
-          left: `${position.x + 10}px` // Default position to right of cursor
-        }));
+      // Adjust horizontal position
+      if (spaceRight < rect.width + 20 && spaceLeft > rect.width + 20) {
+        // Not enough space right but enough left - show to the left
+        leftPos = position.x - rect.width - 10;
+      } else if (spaceRight < rect.width + 20) {
+        // Not enough space right or left - center as much as possible
+        leftPos = Math.max(calendarRect.left + 5, viewportWidth - rect.width - 5);
       }
+      
+      setTooltipStyle({
+        top: `${topPos}px`,
+        left: `${leftPos}px`,
+        maxHeight: `${viewportHeight - 20}px`,
+        overflowY: 'auto'
+      });
     }
   }, [position, visible]);
     if (!visible) return null;
@@ -101,9 +118,8 @@ const EventTooltip = ({
     <div 
       ref={tooltipRef}
       className="absolute z-50 bg-black bg-opacity-90 text-white rounded p-3 shadow-lg text-xs max-w-xs"
-      style={tooltipStyle}
-    ><div className="tracking-wide text-sm">{event.courseCode}</div>
-      <div className="font-medium mt-1">{event.title}</div>
+      style={tooltipStyle}    ><div className="tracking-wide text-sm">{event.courseCode}</div>
+      <div className="font-medium mt-1">{event.title.replace(`${event.courseCode}: `, '')}</div>
       <div className="mt-1 text-yellow-300 text-xs font-semibold">
         {/* Format the time display using military and regular time */}
         {`${event.startHour % 12 || 12}:${event.startMinute.toString().padStart(2, '0')} ${event.startHour >= 12 ? 'PM' : 'AM'} - ${event.endHour % 12 || 12}:${event.endMinute.toString().padStart(2, '0')} ${event.endHour >= 12 ? 'PM' : 'AM'}`}

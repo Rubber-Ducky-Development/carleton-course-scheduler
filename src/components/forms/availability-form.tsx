@@ -21,9 +21,7 @@ export function AvailabilityDayForm({ day }: AvailabilityDayProps) {
 
     const dayAvailability = preferences.dailyAvailability.find((d) => d.day === day);
 
-    if (!dayAvailability) return null;
-
-    const handleTimeChange = (time: TimeOfDay, checked: boolean) => {
+    if (!dayAvailability) return null;    const handleTimeChange = (time: TimeOfDay, checked: boolean) => {
         let newTimes = [...dayAvailability.availableTimes];
 
         if (checked) {
@@ -33,7 +31,16 @@ export function AvailabilityDayForm({ day }: AvailabilityDayProps) {
         }
 
         updateDayAvailability(day, newTimes);
-    };    return (
+        
+        // If all time of day options are unchecked, set max classes to 0
+        if (newTimes.length === 0) {
+            updateMaxClassesPerDay(day, 0);
+        } 
+        // If the user just checked a box and max classes is currently 0, set it back to 7
+        else if (checked && dayAvailability.maxClassesPerDay === 0) {
+            updateMaxClassesPerDay(day, 7);
+        }
+    };return (
         <div>
             <h3 className="mb-2 font-medium text-indigo-700 text-lg">{day}</h3>
             
@@ -59,7 +66,21 @@ export function AvailabilityDayForm({ day }: AvailabilityDayProps) {
                     max={7}
                     step={1}
                     value={dayAvailability.maxClassesPerDay}
-                    onChange={(e) => updateMaxClassesPerDay(day, Number(e.target.value))}
+                    onChange={(e) => {
+                        const newValue = Number(e.target.value);
+                        
+                        // When slider is set to 0, uncheck all checkboxes
+                        if (newValue === 0) {
+                            updateDayAvailability(day, []);
+                        } 
+                        // If slider was 0 and is now being increased, re-enable all time slots
+                        else if (dayAvailability.maxClassesPerDay === 0 && dayAvailability.availableTimes.length === 0) {
+                            updateDayAvailability(day, ['Morning', 'Afternoon', 'Evening']);
+                        }
+                        
+                        // Update the max classes value
+                        updateMaxClassesPerDay(day, newValue);
+                    }}
                     showValue={true}
                 />
             </div>
