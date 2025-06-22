@@ -16,27 +16,22 @@ function stringToColor(str: string) {
     hash = coursePrefix.charCodeAt(i) + ((hash << 5) - hash);
   }  // Academic-focused color palette with professional, distinct hues - slightly brightened
   const colorPalette = [
-    '#1976D2', // Brightened Oxford Blue
-    '#C0392B', // Brightened Harvard Crimson
-    '#27AE60', // Brightened Dartmouth Green
-    '#8E44AD', // Brightened Princeton Purple
-    '#D4752C', // Brightened Amber Brown
-    '#16A085', // Brightened Collegiate Teal
-    '#A04000', // Brightened Mahogany
-    '#7045FF', // Brightened Royal Blue
-    '#2E8B57', // Brightened Dark Evergreen
-    '#B03A2E', // Brightened Cornell Red
-    '#2980B9', // Brightened Yale Blue
-    '#6C3483', // Brightened Deep Plum
-    '#16A085', // Brightened Forest Green
-    '#9A7D0A', // Brightened Bronze
-    '#6C3483', // Brightened Deep Indigo
-    '#34495E', // Brightened Dark Slate
-    '#922B21', // Brightened Burgundy
-    '#1E8449', // Brightened British Racing Green
-    '#9C640C', // Brightened Chocolate Brown
-    '#4A6EA9', // Brightened Charcoal Blue
-    '#1A5276'  // Brightened Navy Blue
+    '#3182ce', // Blue
+    '#e53e3e', // Red
+    '#38a169', // Green
+    '#805ad5', // Purple
+    '#dd6b20', // Orange
+    '#319795', // TealAdd commentMore actions
+    '#d53f8c', // Pink
+    '#718096', // Gray
+    '#d69e2e', // Yellow
+    '#2c5282', // Dark Blue
+    '#9f7aea', // Light Purple
+    '#f56565', // Light Red
+    '#48bb78', // Light Green
+    '#ed8936', // Light Orange
+    '#0694a2', // Cyan
+    '#6b46c1'  // Violet
   ];
   
   // Use the hash to select a color from the palette
