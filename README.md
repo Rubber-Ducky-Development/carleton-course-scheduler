@@ -122,3 +122,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
   <p>Made with ❤️ for Carleton University students</p>
   <p>Have questions or feedback? <a href="https://github.com/Rubber-Ducky-Development/carleton-course-scheduler/issues">Open an issue</a> or contribute!</p>
 </div>
+
+## ⚠️ Disclaimer
+
+We are not affiliated, associated, authorized, endorsed by, or in any way officially connected with Carleton University, or any of its subsidiaries or its affiliates. The official Carleton University website can be found at [https://carleton.ca](https://carleton.ca).
