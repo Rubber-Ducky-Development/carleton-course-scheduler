@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Termwise | Carleton Course Scheduler for Fall 2025",
+  title: "Termwise | Carleton Course Scheduler",
   description: "Termwise is a course scheduler built for Carleton students that automatically creates your perfect timetable based on your preferences. Just input your courses and time constraints, and let Termwise handle the rest.",  
   icons: {
     icon: './favicon.ico',

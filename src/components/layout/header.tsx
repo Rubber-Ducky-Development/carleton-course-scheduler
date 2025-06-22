@@ -9,7 +9,9 @@ export function Header() {
                     <h1 className="text-lg md:text-xl font-bold text-gray-800 flex flex-col sm:flex-row sm:items-center">
                         <span className="text-indigo-600">Termwise</span>
                         <span className="hidden sm:inline mx-2">|</span>
-                        <span className="text-gray-700 text-sm sm:text-base md:text-xl">Carleton Course Scheduler</span>
+                     <span className="text-gray-700 text-sm sm:text-base md:text-xl">
+                    <span className="block sm:inline">Carleton Course Scheduler<br className="sm:hidden" /> for Fall 2025</span>
+                    </span>
                     </h1>
                 </div>
 
