@@ -200,13 +200,9 @@ export const useSchedulerStore = create<SchedulerState>((set, get) => ({
             return;
         }
         
-        set({ isGenerating: true });
-
-        try {
-            console.log('Generating schedule with preferences:', prefs);            // First, validate courses exist before sending to the Edge Function
+        set({ isGenerating: true });        try {
+            // First, validate courses exist before sending to the Edge Function
             const validateUrl = '/api/validate-courses';
-            console.log('Validating courses first at:', validateUrl);
-            console.log('Courses to validate:', prefs.courses.map(c => c.courseCode).join(', '));
             
             const validationResult = await fetch(validateUrl, {
                 method: 'POST',
@@ -219,61 +215,43 @@ export const useSchedulerStore = create<SchedulerState>((set, get) => ({
                 set({ isGenerating: false });
                 return;
             }
-            
-            const validation = await validationResult.json();
-            console.log('Validation response:', validation);
+              const validation = await validationResult.json();
             
             if (validation.invalidCourses && validation.invalidCourses.length > 0) {
                 toast.error(validation.message || `The following courses were not found: ${validation.invalidCourses.join(', ')}`);
                 set({ isGenerating: false });
                 return;
             }
-            
-            // Proceed with schedule generation if validation passes
+              // Proceed with schedule generation if validation passes
             const apiUrl = '/api/generate-schedule';
-            console.log('Using API URL:', apiUrl);
             
             const headers: HeadersInit = {
                 'Content-Type': 'application/json'
             };
-            
-            console.log('Making API call with headers:', headers);
-            
-            const response = await fetch(apiUrl, {
+              const response = await fetch(apiUrl, {
                 method: 'POST',
                 headers,
                 body: JSON.stringify(prefs),
             });
             
-            console.log('API response status:', response.status);
-            
             if (!response.ok) {
-                const errorText = await response.text();
-                throw new Error(`Error ${response.status}: ${errorText}`);
+                const errorText = await response.text();                throw new Error(`Error ${response.status}: ${errorText}`);
             }            const result = await response.json();
-            console.log('Schedule generated successfully:', result);            // Update the schedule store with the generated schedule and alternatives
+            // Update the schedule store with the generated schedule and alternatives
             useScheduleStore.getState().setSchedule(
               result.courses,
               result.alternativeSchedules || null,
               !!result.demo,
               result.message || null
-            );// Log the primary schedule courses
-            const coursesList = result.courses.map((c: {courseCode: string; title: string; instructor: string; sectionType: string}) => 
-                `${c.courseCode}: ${c.title} with ${c.instructor} (${c.sectionType})`
-            ).join('\n');
-            
-            console.log('Generated schedule courses:\n', coursesList);
+            );// Log the primary schedule courses            // Course mapping is done directly in the setSchedule method
               // Show success toast with hint about viewing more details
             toast.success(
                 window.innerWidth <= 768 
                 ? "Schedule generated! Tap on courses in the calendar to see more details." 
                 : "Schedule generated! Hover over courses in the calendar to see more details."
             );
-            
-            // Log alternative schedules if they exist
-            if (result.alternativeSchedules && result.alternativeSchedules.length > 0) {
-                console.log(`Found ${result.alternativeSchedules.length} alternative schedules`);
-            }} catch (error) {
+              // Alternative schedules handled by setSchedule method
+            }catch (error) {
             console.error('Failed to generate schedule:', error);
             
             // Show error toast

@@ -77,10 +77,7 @@ export async function POST(request: NextRequest) {
           'Retry-After': '60'
         }
       }
-    );
-  }
-    // Log that the API endpoint was hit
-  console.log('API endpoint hit: /api/generate-schedule');
+    );  }
   
   try {
     // Parse the request body
@@ -150,10 +147,8 @@ export async function POST(request: NextRequest) {
         }
       );
     }
-    
-    // Send the request to the Supabase Edge Function
+      // Send the request to the Supabase Edge Function
     const supabaseUrl = `${process.env.SUPABASE_EDGE_FUNCTION_URL}/filter-courses`;
-    console.log(`Forwarding request to Edge Function`);
     
     const response = await fetch(supabaseUrl, {
       method: 'POST',
@@ -177,10 +172,8 @@ export async function POST(request: NextRequest) {
         }
       );
     }
-    
-    // Return the response from the Edge Function
+      // Return the response from the Edge Function
     const data = await response.json();
-    console.log('Successfully received response from Edge Function');
     
     return NextResponse.json(data, {
       headers: corsHeaders()    });

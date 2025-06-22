@@ -19,11 +19,7 @@ const corsHeaders = () => {
 };
 
 // Create a new API route to validate course existence before sending to the edge function
-export async function POST(req: NextRequest) {
-  // Log that the API endpoint was hit
-  console.log('API endpoint hit: /api/validate-courses');
-  
-  try {
+export async function POST(req: NextRequest) {  try {
     // Parse the request body
     const { courses } = await req.json() as { courses: CoursePreference[] };
     
@@ -63,10 +59,8 @@ export async function POST(req: NextRequest) {
         }
       );
     }
-    
-    // Send the request to the Supabase Edge Function
+      // Send the request to the Supabase Edge Function
     const supabaseUrl = `${process.env.SUPABASE_EDGE_FUNCTION_URL}/validate-courses`;
-    console.log(`Forwarding request to Edge Function: ${supabaseUrl}`);
     
     // Prepare the request payload
     const requestData = {
@@ -99,10 +93,8 @@ export async function POST(req: NextRequest) {
           }
         );
       }
-      
-      // Return the response from the Edge Function
+        // Return the response from the Edge Function
       const validationResult = await response.json();
-      console.log('Successfully received validation response from Edge Function');
       
       return NextResponse.json(validationResult, {
         headers: corsHeaders()
@@ -114,10 +106,8 @@ export async function POST(req: NextRequest) {
         { 
           status: 500,
           headers: corsHeaders()
-        }
-      );
-    }    // Log validation message
-    console.log(`Validation complete: ${courseCodesForValidation.length} courses sent for validation`);
+        }      );
+    }
     
   } catch (error) {
     console.error('Error validating courses:', error);

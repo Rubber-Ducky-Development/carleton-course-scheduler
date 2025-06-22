@@ -45,13 +45,12 @@ export function CourseForm({ index }: CourseFormProps) {
                     value={course.courseCode}
                     onChange={(e) => updateCourseCode(index, e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '').substring(0, 15))}
                     maxLength={15}
-                />
-
-                <Input
+                />                <Input
                     label="Preferred Instructor"
                     placeholder="Enter preferred instructor name"
                     value={course.preferredInstructor}
-                    onChange={(e) => updatePreferredInstructor(index, e.target.value)}
+                    onChange={(e) => updatePreferredInstructor(index, e.target.value.replace(/[^a-zA-Z\s\-'.]/g, '').substring(0, 35))}
+                    maxLength={35}
                 />
                 <div>
                     <p className="text-sm text-indigo-600 font-medium mb-2">
