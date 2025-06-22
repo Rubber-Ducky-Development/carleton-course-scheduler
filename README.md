@@ -1,36 +1,124 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🦆 Termwise | Carleton Course Scheduler
 
-## Getting Started
+<div align="center">
+  <img src="/public/og-duck.png" alt="Termwise Duck Logo" width="200">
+  <h3>Say goodbye to manual schedule planning!</h3>
+</div>
 
-First, run the development server:
+[![Next.js](https://img.shields.io/badge/built%20with-Next.js-000?logo=nextdotjs)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-4.9.5-blue?logo=typescript)](https://www.typescriptlang.org/)
+[![TailwindCSS](https://img.shields.io/badge/TailwindCSS-3.3.0-06B6D4?logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
+[![Contributors Welcome](https://img.shields.io/badge/contributors-welcome-brightgreen)](CONTRIBUTING.md)
+[![MIT License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
+
+## ✨ Overview
+
+Termwise is an intelligent course scheduler built for Carleton University students that automatically generates optimal course timetables based on user preferences. No more spreadsheets, manual conflict checking, or spending hours finding the perfect schedule!
+
+**Key Features:**
+
+- 🔄 **Automatic Schedule Generation** - Simply input your courses and constraints, and let our algorithm do the work
+- 🎯 **Preference-Based Scheduling** - Set instructor preferences, time of day preferences, and more
+- ⏰ **Buffer Time Management** - Ensure you have enough time between classes
+- 🔀 **Alternative Schedules** - View multiple schedule options sorted by how well they match your preferences
+- 📅 **Visual Calendar View** - Easily visualize your weekly schedule
+- 📱 **Mobile-Friendly** - Works across all devices
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- [Node.js](https://nodejs.org/) (v18 or newer)
+- npm, yarn, or pnpm
+
+### Installation
 
 ```bash
+# Clone the repository
+git clone https://github.com/Rubber-Ducky-Development/carleton-course-scheduler.git
+cd carleton-course-scheduler
+
+# Install dependencies
+npm install
+# or
+yarn install
+# or
+pnpm install
+
+# Start the development server
 npm run dev
 # or
 yarn dev
 # or
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the application.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🧩 How It Works
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Termwise uses a sophisticated algorithm to generate course schedules while respecting:
 
-## Learn More
+1. **Course Requirements** - Ensuring all required courses are included
+2. **Time Preferences** - Morning, afternoon, or evening preferences for each day
+3. **Instructor Preferences** - Prioritizing preferred instructors when possible
+4. **Section Type Preferences** - Lecture, lab, tutorial preferences
+5. **Buffer Time** - Maintaining minimum time between classes
+6. **Max Classes Per Day** - Limiting the number of classes per day
 
-To learn more about Next.js, take a look at the following resources:
+Our algorithm scores potential schedules based on how well they satisfy these preferences and returns a ranked list of options.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🏗️ Project Structure
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```
+├── src/
+│   ├── app/              # Next.js app router pages
+│   ├── components/       # React components
+│   │   ├── forms/        # Form components
+│   │   ├── layout/       # Layout components
+│   │   ├── scheduler/    # Scheduler components
+│   │   └── ui/           # UI components
+│   ├── lib/              # Utilities and helpers
+│   │   ├── api/          # API functions
+│   │   ├── store/        # State management
+│   │   ├── types/        # TypeScript type definitions
+│   │   └── utils/        # Utility functions
+└── public/               # Static assets
+```
 
-## Deploy on Vercel
+## 🤝 Contributing
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Contributions are always welcome! Whether it's:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- 🐛 Bug fixes
+- ✨ New features
+- 📝 Documentation improvements
+- 🎨 UI/UX enhancements
+
+Please see our [Contributing Guidelines](CONTRIBUTING.md) for more details.
+
+### Development Process
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgements
+
+- [Carleton University](https://carleton.ca/) for course data
+- [Next.js](https://nextjs.org/) for the React framework
+- [TailwindCSS](https://tailwindcss.com/) for styling
+- [Zustand](https://github.com/pmndrs/zustand) for state management
+
+---
+
+<div align="center">
+  <p>Made with ❤️ for Carleton University students</p>
+  <p>Have questions or feedback? <a href="https://github.com/Rubber-Ducky-Development/carleton-course-scheduler/issues">Open an issue</a> or contribute!</p>
+</div>
