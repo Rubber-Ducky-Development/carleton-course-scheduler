@@ -20,15 +20,14 @@ export const metadata: Metadata = {
   description: "Termwise is a course scheduler built for Carleton students that automatically creates your perfect timetable based on your preferences. Just input your courses and time constraints, and let Termwise handle the rest.",  
   icons: {
     icon: './favicon.ico',
-  },
-  openGraph: {
+  },  openGraph: {
     title: "Termwise | Carleton Course Scheduler",
     description: "Termwise is a course scheduler built for Carleton students that automatically creates your perfect timetable based on your preferences. Just input your courses and time constraints, and let Termwise handle the rest.",
-    images: [{ url: '/og-duck.png', width: 800, height: 800, alt: "Yellow rubber duck" }],
+    images: [{ url: '/og-duck.png', width: 256, height: 256, alt: "Yellow rubber duck" }],
     type: "website",
   },
   twitter: {
-    card: "summary_large_image",
+    card: "summary",
     title: "Termwise | Carleton Course Scheduler",
     description: "Termwise is a course scheduler built for Carleton students that automatically creates your perfect timetable based on your preferences. Just input your courses and time constraints, and let Termwise handle the rest.",
     images: ['/og-duck.png'],

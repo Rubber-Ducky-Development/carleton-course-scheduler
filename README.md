@@ -13,7 +13,7 @@
 
 ## ✨ Overview
 
-Termwise is an intelligent course scheduler built for Carleton University students that automatically generates optimal course timetables based on user preferences. No more spreadsheets, manual conflict checking, or spending hours finding the perfect schedule!
+Termwise is an intelligent course scheduler built for Carleton University students that automatically generates optimal course timetables based on user preferences. No more switching tabs, checking courses by hand, or hunting for overlaps across every plan. Say goodbye to the scheduling cries plan it all smoothly with Termwise :)
 
 **Key Features:**
 
