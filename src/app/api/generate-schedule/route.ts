@@ -42,7 +42,7 @@ const checkRateLimit = (ip: string): { allowed: boolean, limit: number, remainin
 const corsHeaders = () => {
   // In production, restrict to specific origins
   const allowedOrigins = process.env.NODE_ENV === 'production' 
-    ? ['https://carleton-course-scheduler.vercel.app'] 
+    ? ['https://termwise.ca'] 
     : ['http://localhost:3000'];
     
   // Get the origin from environment or default to first allowed origin

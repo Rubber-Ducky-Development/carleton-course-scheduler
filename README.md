@@ -28,10 +28,11 @@ Termwise is an intelligent course scheduler built for Carleton University studen
 
 You can access Termwise through any of the following domains:
 
-- [termwise.nathantan.com](https://termwise.nathantan.com)
-- [termwise.nolandruid.com](https://termwise.nolandruid.com)
+- [termwise.ca](https://termwise.ca) - Primary domain
+- [termwise.nathantan.com](https://termwise.nathantan.com) - Redirect domain
+- [termwise.nolandruid.com](https://termwise.nolandruid.com) - Redirect domain
 
-All domains point to the same application and provide identical functionality.
+All domains point to the same application.
 
 ## 🚀 Getting Started
 

@@ -2,6 +2,9 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   /* config options here */
+  env: {
+    NEXT_PUBLIC_ANALYTICS_ID: process.env.ANALYTICS_ID
+  },
   async headers() {
     return [
       {
