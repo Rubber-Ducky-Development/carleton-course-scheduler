@@ -7,6 +7,7 @@ import { AvailabilityDayForm } from '@/components/forms/availability-form';
 import { SchedulerForm } from '@/components/forms/scheduler-form';
 import { ScheduleDisplay } from '@/components/scheduler/schedule-display';
 import { Header } from '@/components/layout/header';
+import { NoticeBanner } from '@/components/ui/notice-banner';
 import { useSchedulerStore } from '@/lib/store/scheduler';
 
 export default function Home() {
@@ -16,14 +17,20 @@ export default function Home() {
       <Header />
       
       <main className="flex-1 px-4 py-6 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-7xl">
-          <div className="mb-5 text-center">
+        <div className="mx-auto max-w-7xl">          <div className="mb-5 text-center">
             <h1 className="mb-2 text-3xl font-bold text-gray-800 sm:text-4xl">
               Termwise <span className="text-indigo-600">🌟</span>
             </h1>
             <p className="text-base text-gray-600 max-w-lg mx-auto">
               Enter your preferences to generate an optimal schedule
             </p>
+          </div>
+          
+          {/* Notice Banner */}
+          <div className="max-w-4xl mx-auto mb-6">
+            <NoticeBanner type="warning" title="Fall 2025 Limited Availability">
+              Only Fall 2025 courses are available. Some lectures, labs, and tutorials may be missing, as Carleton has not finalized all courses. Course availability here doesn't guarantee space or access on Carleton Central. Specific sections can be specified.
+            </NoticeBanner>
           </div>
 
           {/* Course Preferences Section */}

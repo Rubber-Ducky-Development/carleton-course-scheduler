@@ -1,7 +1,7 @@
 # 🦆 Termwise | Carleton Course Scheduler
 
 <div align="center">
-  <img src="/public/og-duck.png" alt="Termwise Duck Logo" width="200">
+  <img src="/public/og-termwise.png" alt="Termwise Duck Logo" width="200">
   <h3>Say goodbye to manual schedule planning!</h3>
 </div>
 
@@ -23,6 +23,15 @@ Termwise is an intelligent course scheduler built for Carleton University studen
 - 🔀 **Alternative Schedules** - View multiple schedule options sorted by how well they match your preferences
 - 📅 **Visual Calendar View** - Easily visualize your weekly schedule
 - 📱 **Mobile-Friendly** - Works across all devices
+
+## 🌐 Live Site Access
+
+You can access Termwise through any of the following domains:
+
+- [termwise.nathantan.com](https://termwise.nathantan.com)
+- [termwise.nolandruid.com](https://termwise.nolandruid.com)
+
+All domains point to the same application and provide identical functionality.
 
 ## 🚀 Getting Started
 
