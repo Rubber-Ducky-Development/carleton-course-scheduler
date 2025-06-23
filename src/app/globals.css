@@ -1,5 +1,30 @@
 @import "tailwindcss";
 
+/* Anti-flicker solution for theme switching */
+html:not(.dark):not(.light) {
+  visibility: visible;
+}
+
+html.dark,
+html.light {
+  visibility: visible;
+}
+
+/* Prevent flash of wrong theme on page load */
+@media (prefers-color-scheme: dark) {
+  html:not(.light) {
+    --background: #0f172a;
+    --foreground: #f1f5f9;
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  html:not(.dark) {
+    --background: #f6f8fb;
+    --foreground: #2d3748;
+  }
+}
+
 :root {
   --background: #f6f8fb;
   --foreground: #2d3748;
@@ -27,7 +52,7 @@
 }
 
 body {
-  background: var(--background);
+  background: linear-gradient(to bottom, #f0f2f7, #e8ecf7);
   color: var(--foreground);
   font-family: var(--font-sans), system-ui, -apple-system, sans-serif;
 }
@@ -83,4 +108,508 @@ body {
 
 .list-item-text {
   color: var(--text-dark);
+}
+
+/* Dark theme variables */
+.dark {
+  --background: #0f172a;
+  --foreground: #f1f5f9;
+  --card-background: #1e293b;
+  --card-border: #334155;
+  --primary-color: #6366f1;
+  --primary-hover: #5b5bf6;
+  --accent-color: #334155;
+  --accent-hover: #475569;  --purple-light: #4c1d95;
+  --purple-mid: #7c3aed;
+  --purple-dark: #c084fc;
+  --soft-gray: #1e293b;
+  --text-muted: #94a3b8;
+  --text-dark: #f1f5f9;
+  --shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.3), 0 1px 2px -1px rgba(0, 0, 0, 0.2);
+  --shadow-hover: 0 4px 6px -2px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+}
+
+/* Dark theme overrides for custom styles */
+.dark .label-indigo label {
+  color: #818cf8;
+}
+
+.dark .border-purple-100 {
+  border-color: var(--purple-light);
+}
+
+.dark .bg-purple-50 {
+  background-color: var(--purple-light);
+}
+
+.dark .card-purple-hover:hover {
+  background-color: var(--purple-light);
+  border-color: var(--purple-mid);
+}
+
+.dark .text-purple {
+  color: var(--purple-dark);
+}
+
+.dark .border-purple {
+  border-color: var(--purple-mid);
+}
+
+.dark .purple-accent {
+  background-color: var(--purple-light);
+  border-left: 3px solid var(--purple-dark);
+}
+
+.dark .purple-highlight {
+  background-color: var(--purple-light);
+}
+
+.dark .course-card:hover {
+  border-color: var(--purple-mid);
+}
+
+.dark .list-item-text {
+  color: var(--text-dark);
+}
+
+.dark body {
+  background: var(--background);
+  color: var(--foreground);
+}
+
+/* Dark mode form styling */
+.dark input {
+  background: #1e293b;
+  border-color: #334155;
+  color: #f1f5f9;
+}
+
+.dark input:focus {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.3);
+}
+
+.dark input::placeholder {
+  color: #94a3b8;
+}
+
+.dark label {
+  color: #f1f5f9;
+}
+
+.dark .card {
+  background: #1e293b;
+  border-color: #334155;
+  color: #f1f5f9;
+}
+
+.dark .card:hover {
+  border-color: #553c9a;
+  background: #1e293b;
+}
+
+/* Dark mode notice banner */
+.dark .notice-banner {
+  background: #0f172a;
+  border-color: #334155;
+  color: #f1f5f9;
+}
+
+/* Dark mode notice banner specific overrides */
+.dark .bg-gradient-to-r.from-amber-50.to-yellow-50 {
+  background: #78716c !important;
+}
+
+.dark .border-amber-200 {
+  border-color: #fde047 !important;
+}
+
+.dark .text-amber-800 {
+  color: #fef08a !important;
+}
+
+.dark .text-amber-900 {
+  color: #fefce8 !important;
+}
+
+.dark .text-amber-600 {
+  color: #fde047 !important;
+}
+
+/* Dark mode radio buttons */
+.dark input[type="radio"] {
+  background: #1e293b;
+  border-color: #334155;
+}
+
+.dark input[type="radio"]:checked {
+  background: #6366f1;
+  border-color: #6366f1;
+}
+
+/* Dark mode checkboxes */
+.dark input[type="checkbox"] {
+  background: #1e293b;
+  border-color: #334155;
+}
+
+.dark input[type="checkbox"]:checked {
+  background: #6366f1;
+  border-color: #6366f1;
+}
+
+/* Dark mode text color overrides */
+.dark .text-indigo-700 {
+  color: #a78bfa !important;
+}
+
+.dark .text-gray-700 {
+  color: #f1f5f9 !important;
+}
+
+.dark .text-gray-600 {
+  color: #cbd5e1 !important;
+}
+
+.dark .text-gray-800 {
+  color: #f1f5f9 !important;
+}
+
+/* Dark mode course cards - ensure they use dark styling */
+.dark .course-card {
+  background: #1e293b !important;
+  border-color: #334155 !important;
+  color: #f1f5f9 !important;
+}
+
+.dark .course-card:hover {
+  background: #1e293b !important;
+  transform: translateY(-2px);
+  /* Remove purple border on hover */
+}
+
+/* Dark mode "Add another course" card styling */
+.dark .border-dashed.border-indigo-200 {
+  border-color: #79809B !important; /* Dark purple for dashed border */
+  border-style: dashed !important;
+}
+
+.dark .hover\:bg-indigo-50:hover {
+  background-color: rgba(30, 41, 59, 0.4) !important; /* Subtle dark background on hover */
+}
+
+.dark .hover\:border-indigo-400:hover {
+  border-color: #7980E1 !important; /* Lighter purple border on hover */
+}
+
+/* Fallback for any border-indigo-200 elements */
+.dark .border-indigo-200 {
+  border-color: #553c9a !important;
+}
+
+.dark .bg-indigo-100 {
+  background-color: #475569 !important;
+}
+
+.dark .text-indigo-600 {
+  color: #a78bfa !important;
+}
+
+/* Dark mode for "Add another course" card icons and text */
+.dark .bg-indigo-100 {
+  background-color: #334155 !important; /* Darker background for icon circle */
+}
+
+.dark .text-indigo-600 {
+  color: #c7d2fe !important; /* Lighter purple text for better contrast */
+}
+
+/* Dark mode purple section backgrounds */
+.dark .course-card .bg-purple-50\/70,
+.dark .bg-purple-50\/70 {
+  background-color: #1e293b !important;
+}
+
+.dark .course-card .border-purple-100\/60,
+.dark .border-purple-100\/60 {
+  border-color: #334155 !important;
+}
+
+.dark .text-indigo-600 {
+  color: #a78bfa !important;
+}
+
+/* Dark mode header styling */
+.dark header {
+  background: rgba(15, 23, 42, 0.9) !important;
+  border-bottom-color: #334155 !important;
+}
+
+.dark .bg-\[#f7f8fc\]\/90 {
+  background: rgba(15, 23, 42, 0.9) !important;
+}
+
+.dark .border-indigo-100 {
+  border-color: #334155 !important;
+}
+
+/* Dark mode feedback button styling */
+.dark .bg-gray-400 {
+  background-color: #334155 !important;
+  border-color: #475569 !important;
+}
+
+.dark .hover\:bg-gray-500:hover {
+  background-color: #475569 !important;
+  border-color: #64748b !important;
+}
+
+/* Dark mode section divider styling */
+.dark .border-purple-800 {
+  border-color: #64748b !important;
+}
+
+.dark .border-purple-200 {
+  border-color: #64748b !important;
+}
+
+/* Dark mode calendar styling */
+.dark .calendar-container {
+  background-color: #1e293b !important;
+  border-color: #334155 !important;
+}
+
+.dark .calendar-container .border-gray-100 {
+  border-color: #475569 !important;
+}
+
+.dark .calendar-container .border-gray-200 {
+  border-color: #334155 !important;
+}
+
+.dark .calendar-container .bg-gradient-to-r.from-indigo-50.to-indigo-100\/50 {
+  background: #475569 !important;
+}
+
+.dark .calendar-container .text-gray-700 {
+  color: #f1f5f9 !important;
+}
+
+.dark .calendar-container .text-gray-500 {
+  color: #94a3b8 !important;
+}
+
+/* Dark mode feedback dialog styling */
+.dark .bg-white {
+  background-color: #1e293b !important;
+}
+
+.dark .text-gray-900 {
+  color: #f1f5f9 !important;
+}
+
+.dark .text-gray-500 {
+  color: #cbd5e1 !important;
+}
+
+.dark .border-gray-300 {
+  border-color: #475569 !important;
+}
+
+.dark .placeholder\:text-gray-400::placeholder {
+  color: #94a3b8 !important;
+}
+
+.dark .focus\:ring-primary-500:focus {
+  --tw-ring-color: #6366f1 !important;
+}
+
+.dark .text-red-500 {
+  color: #f87171 !important;
+}
+
+.dark .text-green-500 {
+  color: #10b981 !important;
+}
+
+/* Dark mode footer - remove purple outline */
+.dark .border-indigo-800 {
+  border-color: #475569 !important;
+}
+
+.dark .bg-slate-900 {
+  background-color: #0f172a !important;
+}
+
+/* Ensure body background is dark */
+.dark body {
+  background: linear-gradient(to bottom, #0f172a, #1e293b) !important;
+  color: #f1f5f9 !important;
+}
+
+/* Fix footer background color specifically */
+.dark footer {
+  background-color: #0f172a !important;
+}
+
+/* Override any light backgrounds */
+.dark .bg-white {
+  background-color: #1e293b !important;
+}
+
+.dark .bg-gray-50 {
+  background-color: #334155 !important;
+}
+
+.dark .bg-gray-100 {
+  background-color: #475569 !important;
+}
+
+/* Dark mode slider value indicator - darken the white background */
+.dark .bg-indigo-100 {
+  background-color: #475569 !important;
+}
+
+.dark .text-indigo-700 {
+  color: #cbd5e1 !important;
+}
+
+/* Dark mode schedule display components */
+
+.dark .border-gray-200 {
+  border-color: #475569 !important;
+}
+
+.dark .text-indigo-800 {
+  color: #a78bfa !important;
+}
+
+/* Dark mode button group container */
+.dark .bg-gray-50 {
+  background-color: #334155 !important;
+}
+
+/* Dark mode button variants */
+.dark .bg-gray-50.text-gray-800.hover\:bg-gray-100.border.border-gray-100 {
+  background-color: #475569 !important;
+  color: #f1f5f9 !important;
+  border-color: #64748b !important;
+}
+
+.dark .bg-gray-50.text-gray-800.hover\:bg-gray-100.border.border-gray-100:hover {
+  background-color: #64748b !important;
+}
+
+/* Dark mode select component */
+.dark select {
+  background-color: #1e293b !important;
+  border-color: #475569 !important;
+  color: #f1f5f9 !important;
+}
+
+.dark select:focus {
+  border-color: #6366f1 !important;
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.3) !important;
+}
+
+.dark select option {
+  background-color: #1e293b !important;
+  color: #f1f5f9 !important;
+}
+
+/* Dark mode message cards - make them more visible */
+.dark .bg-gradient-to-r.from-indigo-50\/70.to-purple-50\/70 {
+  background: linear-gradient(to right, #334155, #475569) !important;
+}
+
+.dark .border-indigo-100 {
+  border-color: #64748b !important;
+}
+
+.dark .text-indigo-700 {
+  color: #cbd5e1 !important;
+}
+
+/* Dark mode alternative schedules message card */
+.dark .bg-indigo-50\/50 {
+  background-color: #334155 !important;
+}
+
+/* Dark mode list view course cards */
+.dark .text-gray-900 {
+  color: #f1f5f9 !important;
+}
+
+.dark .text-indigo-600 {
+  color: #a78bfa !important;
+}
+
+/* Dark mode button hover states - removed conflicting hover:bg-indigo-50 rule */
+.dark .hover\:border-indigo-300:hover {
+  border-color: #6366f1 !important;
+}
+
+.dark .hover\:text-indigo-700:hover {
+  color: #a78bfa !important;
+}
+
+/* Dark mode arrow buttons for alternative schedules */
+.dark button[variant="secondary"] {
+  background-color: #475569 !important;
+  border-color: #64748b !important;
+  color: #f1f5f9 !important;
+}
+
+.dark button[variant="secondary"]:hover {
+  background-color: #64748b !important;
+  border-color: #6366f1 !important;
+}
+
+.dark button[variant="secondary"] svg {
+  color: #f1f5f9 !important;
+}
+
+/* More specific targeting for secondary buttons */
+.dark .bg-gray-50.text-gray-800.hover\:bg-gray-100.border.border-gray-100 {
+  background-color: #475569 !important;
+  color: #f1f5f9 !important;
+  border-color: #64748b !important;
+}
+
+.dark .bg-gray-50.text-gray-800.hover\:bg-gray-100.border.border-gray-100:hover {
+  background-color: #64748b !important;
+  border-color: #64748b !important;
+}
+
+/* Override any purple hover states for navigation buttons */
+.dark .hover\:bg-indigo-50.hover\:border-indigo-300.hover\:text-indigo-700:hover {
+  background-color: #64748b !important;
+  border-color: #64748b !important;
+  color: #f1f5f9 !important;
+}
+
+/* Remove any light borders from navigation buttons - target only buttons */
+.dark button.border-gray-300 {
+  border-color: #64748b !important;
+}
+
+.dark button.border-gray-200 {
+  border-color: #64748b !important;
+}
+
+.dark button.border-gray-100 {
+  border-color: #64748b !important;
+}
+
+
+
+/* Prevent flickering on dark theme page load */
+html.dark-loading,
+html.dark-loading * {
+  transition: none !important;
+}
+
+html.dark body {
+  background: #0f172a !important;
+  color: #f1f5f9 !important;
 }

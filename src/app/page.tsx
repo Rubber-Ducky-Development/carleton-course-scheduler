@@ -13,11 +13,10 @@ import { useSchedulerStore } from '@/lib/store/scheduler';
 export default function Home() {
   const { preferences, addCourse } = useSchedulerStore();
     return (
-    <div className="flex min-h-screen flex-col bg-gradient-to-b from-[#f0f2f7] to-[#e8ecf7]">
+    <div className="flex min-h-screen flex-col">
       <Header />
       
-      <main className="flex-1 px-4 py-6 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-7xl">          <div className="mb-5 text-center">
+      <main className="flex-1 px-4 py-6 sm:px-6 lg:px-8">        <div className="mx-auto max-w-7xl">          <div className="mb-5 text-center">
             <h1 className="mb-2 text-3xl font-bold text-gray-800 sm:text-4xl">
               Termwise <span className="text-indigo-600">🌟</span>
             </h1>
@@ -130,7 +129,7 @@ export default function Home() {
           </section>
         </div>
       </main>
-        <footer className="border-t border-indigo-100 bg-[#f7f8fc] px-4 py-6 sm:px-6 lg:px-8">
+        <footer className="border-t border-indigo-100 dark:border-gray-700 px-4 py-6 sm:px-6 lg:px-8" style={{ backgroundColor: 'var(--background)' }}>
         <div className="mx-auto max-w-3xl text-center text-sm text-gray-500">
           &copy; {new Date().getFullYear()} Termwise. All rights reserved.
           <br />

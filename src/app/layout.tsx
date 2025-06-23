@@ -39,9 +39,30 @@ export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
-}>) {
-  return (
+}>) {  return (
     <html lang="en" suppressHydrationWarning>
+      <head><script
+          dangerouslySetInnerHTML={{
+            __html: `
+              try {
+                const theme = localStorage.getItem('theme');
+                const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                const shouldBeDark = theme === 'dark' || (!theme && systemDark);
+                
+                if (shouldBeDark) {
+                  document.documentElement.classList.add('dark');
+                  document.documentElement.classList.remove('light');
+                } else {
+                  document.documentElement.classList.add('light');
+                  document.documentElement.classList.remove('dark');
+                }
+              } catch (e) {
+                // Fallback to light theme
+                document.documentElement.classList.add('light');
+              }
+            `,
+          }}
+        /></head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
