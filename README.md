@@ -1,4 +1,4 @@
-# 🦆 Termwise | Carleton Course Scheduler
+# 📆 Termwise | Carleton Course Scheduler
 
 <div align="center">
   <img src="/public/og-termwise.png" alt="Termwise Duck Logo" width="200">
