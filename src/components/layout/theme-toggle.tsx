@@ -81,7 +81,7 @@ export function ThemeToggle() {
       </span>
       {/* Dark mode icon - visible when in dark mode */}
       <span
-        className={`absolute right-2 top-1.5 transition-opacity duration-200 ${
+        className={`absolute right-1.5 top-1.5 transition-opacity duration-200 ${
           isDark ? 'opacity-100' : 'opacity-0'
         }`}
       >
@@ -98,10 +98,6 @@ export function ThemeToggle() {
             fill="currentColor"
             className="drop-shadow-sm"
           />
-          {/* Small decorative stars/dots */}
-          <circle cx="16" cy="8" r="1" fill="currentColor" opacity="0.8" />
-          <circle cx="18" cy="6" r="0.8" fill="currentColor" opacity="0.6" />
-          <circle cx="19" cy="10" r="0.7" fill="currentColor" opacity="0.7" />
         </svg>
       </span>
     </button>

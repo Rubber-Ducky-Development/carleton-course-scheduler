@@ -129,7 +129,7 @@ export default function Home() {
           </section>
         </div>
       </main>
-        <footer className="border-t border-indigo-100 dark:border-gray-700 px-4 py-6 sm:px-6 lg:px-8" style={{ backgroundColor: 'var(--background)' }}>
+        <footer className="px-4 py-6 sm:px-6 lg:px-8 bg-white dark:bg-gray-900/80" style={{ backgroundColor: 'var(--background)' }}>
         <div className="mx-auto max-w-3xl text-center text-sm text-gray-500">
           &copy; {new Date().getFullYear()} Termwise. All rights reserved.
           <br />
