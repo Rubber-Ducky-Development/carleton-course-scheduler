@@ -46,10 +46,7 @@ export default function RootLayout({
             __html: `
               try {
                 const theme = localStorage.getItem('theme');
-                const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-                const shouldBeDark = theme === 'dark' || (!theme && systemDark);
-                
-                if (shouldBeDark) {
+                if (theme === 'dark') {
                   document.documentElement.classList.add('dark');
                   document.documentElement.classList.remove('light');
                 } else {
@@ -57,7 +54,6 @@ export default function RootLayout({
                   document.documentElement.classList.remove('dark');
                 }
               } catch (e) {
-                // Fallback to light theme
                 document.documentElement.classList.add('light');
               }
             `,

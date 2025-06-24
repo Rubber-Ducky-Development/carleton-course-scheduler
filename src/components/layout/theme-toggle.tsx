@@ -9,12 +9,6 @@ export function ThemeToggle() {
 
   useEffect(() => {
     setMounted(true);
-    // Set light mode as default if no theme is set
-    if (typeof window !== 'undefined' && !localStorage.getItem('theme')) {
-      document.documentElement.classList.remove('dark');
-      document.documentElement.classList.add('light');
-      localStorage.setItem('theme', 'light');
-    }
   }, []);
 
   // Render a placeholder until mounted to prevent hydration mismatch
