@@ -24,7 +24,7 @@ export function ThemeToggle() {
   return (
     <button
       onClick={toggleTheme}
-      className={`relative inline-flex h-8 w-14 items-center rounded-full transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 dark:focus:ring-gray-400 focus:ring-offset-0 shadow-inner ${
+      className={`relative inline-flex h-8 w-14 items-center rounded-full transition-all duration-200 focus:outline-none shadow-inner ${
         isDark 
           ? 'bg-gradient-to-r from-gray-700 to-gray-800 shadow-lg' 
           : 'bg-gradient-to-r from-gray-200 to-gray-300 hover:from-gray-300 hover:to-gray-400 shadow-md'
