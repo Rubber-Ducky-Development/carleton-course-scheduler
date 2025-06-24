@@ -162,23 +162,23 @@ const parseTimeString = (timeStr: string) => {
 
 // Day mapping from strings to numbers for date-fns
 const dayMap: { [key: string]: number } = {
-  'Monday': 0,
-  'Tuesday': 1,
-  'Wednesday': 2,
-  'Thursday': 3,
-  'Friday': 4,
-  'Saturday': 5,
-  'Sunday': 6
+  'Sunday': 0,
+  'Monday': 1,
+  'Tuesday': 2,
+  'Wednesday': 3,
+  'Thursday': 4,
+  'Friday': 5,
+  'Saturday': 6
 };
 
 // Create a base date for the week
 const getBaseDate = () => {
   const now = new Date();
-  return startOfWeek(now, { weekStartsOn: 1 }); // Week starts on Monday
+  return startOfWeek(now, { weekStartsOn: 0 }); // Week starts on Sunday
 };
 
 // Week days array
-const weekDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+const weekDays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
 // Time slots from 8 AM to 10 PM with half hour precision
 const timeSlots = Array.from({ length: 29 }, (_, i) => {
