@@ -465,6 +465,12 @@ body {
   background-color: #475569 !important;
 }
 
+/* Dark mode radio button inner indicator - must come after general bg-white override */
+.dark input[type="radio"]:checked + div.bg-white,
+.dark .bg-white.opacity-0.peer-checked\:opacity-100 {
+  background-color: #f1f5f9 !important;
+}
+
 /* Dark mode slider value indicator - darken the white background */
 .dark .bg-indigo-100 {
   background-color: #475569 !important;
