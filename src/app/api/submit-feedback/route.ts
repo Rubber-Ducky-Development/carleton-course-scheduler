@@ -4,15 +4,15 @@ export async function POST(request: NextRequest) {
   try {
     // Get the feedback and email from the request body
     const { feedback, email } = await request.json();
-    
+
     // Validate feedback
     if (!feedback || typeof feedback !== 'string') {
       return NextResponse.json(
-        { error: 'Feedback is required and must be text' }, 
+        { error: 'Feedback is required and must be text' },
         { status: 400 }
       );
     }
-    
+
     if (feedback.length > 3000) {
       return NextResponse.json(
         { error: 'Feedback cannot exceed 3000 characters' },
@@ -35,9 +35,9 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
-    
+
     const webhookUrl = process.env.WEBHOOK_URL;
-    
+
     if (!webhookUrl) {
       // In development, log the feedback instead of failing
       if (process.env.NODE_ENV === 'development') {
@@ -49,14 +49,14 @@ export async function POST(request: NextRequest) {
         console.log('---');
         return NextResponse.json({ success: true });
       }
-      
+
       console.error('Webhook URL is not configured');
       return NextResponse.json(
         { error: 'Internal server error' },
         { status: 500 }
       );
     }
-    
+
     // Create the embed with email field if provided
     const embed: {
       title: string;
@@ -89,7 +89,7 @@ export async function POST(request: NextRequest) {
     const payload = {
       embeds: [embed]
     };
-    
+
     // Send the feedback to webhook
     const response = await fetch(webhookUrl, {
       method: 'POST',
@@ -98,11 +98,11 @@ export async function POST(request: NextRequest) {
       },
       body: JSON.stringify(payload),
     });
-    
+
     if (!response.ok) {
       throw new Error(`API responded with status: ${response.status}`);
     }
-    
+
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error('Error submitting feedback:', error);
