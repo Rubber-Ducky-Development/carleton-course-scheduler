@@ -7,15 +7,22 @@ import { Select } from "@/components/ui/select";
 import { useScheduleStore } from "@/lib/store/schedule";
 import { CalendarView } from './calendar-view';
 
-export function ScheduleDisplay() {  const { 
+export function ScheduleDisplay() {  
+  const { 
+    schedules,
+    currentSemester,
+    setCurrentAlternative,
+    getCurrentSchedule 
+  } = useScheduleStore();
+  
+  const currentScheduleData = schedules[currentSemester];
+  const { 
     generatedSchedule, 
     alternativeSchedules, 
     isDemo, 
     message,
-    currentAlternative,
-    setCurrentAlternative,
-    getCurrentSchedule 
-  } = useScheduleStore();
+    currentAlternative
+  } = currentScheduleData;
   
   // Toggle between calendar and list view
   const [viewMode, setViewMode] = useState<'calendar' | 'list'>('calendar');

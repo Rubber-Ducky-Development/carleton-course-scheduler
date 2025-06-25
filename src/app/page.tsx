@@ -8,10 +8,26 @@ import { SchedulerForm } from '@/components/forms/scheduler-form';
 import { ScheduleDisplay } from '@/components/scheduler/schedule-display';
 import { Header } from '@/components/layout/header';
 import { NoticeBanner } from '@/components/ui/notice-banner';
+import { SemesterToggle } from '@/components/ui/semester-toggle';
 import { useSchedulerStore } from '@/lib/store/scheduler';
+import { useScheduleStore } from '@/lib/store/schedule';
 
 export default function Home() {
-  const { preferences, addCourse } = useSchedulerStore();
+  const { 
+    currentSemester, 
+    switchSemester, 
+    getCurrentPreferences, 
+    addCourse 
+  } = useSchedulerStore();
+  
+  const { setSemester } = useScheduleStore();
+  
+  const preferences = getCurrentPreferences();
+  
+  const handleSemesterChange = (semester: typeof currentSemester) => {
+    switchSemester(semester);
+    setSemester(semester);
+  };
     return (
     <div className="flex min-h-screen flex-col">
       <Header />
@@ -27,9 +43,19 @@ export default function Home() {
           
           {/* Notice Banner */}
           <div className="max-w-4xl mx-auto mb-6">
-            <NoticeBanner type="warning" title="Fall 2025 Limited Availability">
-              Only Fall 2025 courses are available. Some lectures, labs, and tutorials may be missing, as Carleton has not finalized all courses. Course availability here does not guarantee space or access on Carleton Central. Specific sections can be specified.
+            <NoticeBanner type="warning" title={`${currentSemester === 'fall' ? 'Fall' : 'Winter'} 2025 Limited Availability`}>
+              Only {currentSemester === 'fall' ? 'Fall' : 'Winter'} 2025 courses are available. Some lectures, labs, and tutorials may be missing, as Carleton has not finalized all courses. Course availability here does not guarantee space or access on Carleton Central. Specific sections can be specified.
             </NoticeBanner>
+          </div>
+
+          {/* Semester Toggle */}
+          <div className="max-w-4xl mx-auto mb-6">
+            <div className="flex justify-center">
+              <SemesterToggle 
+                currentSemester={currentSemester}
+                onSemesterChange={handleSemesterChange}
+              />
+            </div>
           </div>
 
           {/* Course Preferences Section */}

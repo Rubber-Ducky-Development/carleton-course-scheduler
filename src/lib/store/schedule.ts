@@ -1,5 +1,7 @@
 import { create } from 'zustand';
 
+export type Semester = 'fall' | 'winter';
+
 export interface ScheduleCourse {
   courseCode: string;
   title: string;
@@ -35,13 +37,26 @@ export interface ScheduleCourse {
 }
 
 interface ScheduleState {
-  generatedSchedule: ScheduleCourse[] | null;
-  alternativeSchedules: ScheduleCourse[][] | null;
-  currentAlternative: number | null;
-  isDemo: boolean;
-  message: string | null;
+  currentSemester: Semester;
+  schedules: {
+    fall: {
+      generatedSchedule: ScheduleCourse[] | null;
+      alternativeSchedules: ScheduleCourse[][] | null;
+      currentAlternative: number | null;
+      isDemo: boolean;
+      message: string | null;
+    };
+    winter: {
+      generatedSchedule: ScheduleCourse[] | null;
+      alternativeSchedules: ScheduleCourse[][] | null;
+      currentAlternative: number | null;
+      isDemo: boolean;
+      message: string | null;
+    };
+  };
   
   // Actions
+  setSemester: (semester: Semester) => void;
   setSchedule: (
     schedule: ScheduleCourse[], 
     alternativeSchedules: ScheduleCourse[][] | null,
@@ -54,38 +69,71 @@ interface ScheduleState {
 }
 
 export const useScheduleStore = create<ScheduleState>((set, get) => ({
-  generatedSchedule: null,
-  alternativeSchedules: null,
-  currentAlternative: null,
-  isDemo: false,
-  message: null,
+  currentSemester: 'fall',
+  schedules: {
+    fall: {
+      generatedSchedule: null,
+      alternativeSchedules: null,
+      currentAlternative: null,
+      isDemo: false,
+      message: null,
+    },
+    winter: {
+      generatedSchedule: null,
+      alternativeSchedules: null,
+      currentAlternative: null,
+      isDemo: false,
+      message: null,
+    }
+  },
   
   // Actions
-  setSchedule: (schedule, alternativeSchedules, isDemo, message) => set({
-    generatedSchedule: schedule,
-    alternativeSchedules,
-    currentAlternative: null,
-    isDemo,
-    message
-  }),
+  setSemester: (semester: Semester) => set({ currentSemester: semester }),
   
-  clearSchedule: () => set({
-    generatedSchedule: null,
-    alternativeSchedules: null,
-    currentAlternative: null,
-    isDemo: false,
-    message: null
-  }),
+  setSchedule: (schedule, alternativeSchedules, isDemo, message) => set((state) => ({
+    schedules: {
+      ...state.schedules,
+      [state.currentSemester]: {
+        generatedSchedule: schedule,
+        alternativeSchedules,
+        currentAlternative: null,
+        isDemo,
+        message
+      }
+    }
+  })),
   
-  setCurrentAlternative: (alternativeIndex) => set({
-    currentAlternative: alternativeIndex
-  }),
+  clearSchedule: () => set((state) => ({
+    schedules: {
+      ...state.schedules,
+      [state.currentSemester]: {
+        generatedSchedule: null,
+        alternativeSchedules: null,
+        currentAlternative: null,
+        isDemo: false,
+        message: null
+      }
+    }
+  })),
+  
+  setCurrentAlternative: (alternativeIndex) => set((state) => ({
+    schedules: {
+      ...state.schedules,
+      [state.currentSemester]: {
+        ...state.schedules[state.currentSemester],
+        currentAlternative: alternativeIndex
+      }
+    }
+  })),
   
   getCurrentSchedule: () => {
     const state = get();
-    if (state.currentAlternative !== null && state.alternativeSchedules && state.alternativeSchedules[state.currentAlternative]) {
-      return state.alternativeSchedules[state.currentAlternative];
+    const currentScheduleData = state.schedules[state.currentSemester];
+    if (currentScheduleData.currentAlternative !== null && 
+        currentScheduleData.alternativeSchedules && 
+        currentScheduleData.alternativeSchedules[currentScheduleData.currentAlternative]) {
+      return currentScheduleData.alternativeSchedules[currentScheduleData.currentAlternative];
     }
-    return state.generatedSchedule;
+    return currentScheduleData.generatedSchedule;
   }
 }));

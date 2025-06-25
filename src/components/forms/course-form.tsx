@@ -12,13 +12,14 @@ interface CourseFormProps {
 
 export function CourseForm({ index }: CourseFormProps) {
     const {
-        preferences,
+        getCurrentPreferences,
         updateCourseCode,
         updatePreferredInstructor,
         updateSectionTypes,
         removeCourse
     } = useSchedulerStore();
 
+    const preferences = getCurrentPreferences();
     const course = preferences.courses[index];
 
     const sectionTypes: SectionType[] = ['Online', 'Hybrid', 'In-Person'];

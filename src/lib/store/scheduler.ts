@@ -5,13 +5,22 @@ import {
     DayOfWeek,
     SchedulerPreferences,
     SectionType,
-    TimeOfDay
+    TimeOfDay,
+    Semester
 } from '../types/scheduler';
 import { useScheduleStore } from './schedule';
 import { toast } from 'react-hot-toast';
 
 interface SchedulerState {
-    preferences: SchedulerPreferences;
+    currentSemester: Semester;
+    preferences: {
+        fall: SchedulerPreferences;
+        winter: SchedulerPreferences;
+    };
+
+    // Semester Actions
+    switchSemester: (semester: Semester) => void;
+    getCurrentPreferences: () => SchedulerPreferences;
 
     // Course Actions
     addCourse: () => void;
@@ -50,108 +59,158 @@ const initialPreferences: SchedulerPreferences = {
 };
 
 export const useSchedulerStore = create<SchedulerState>((set, get) => ({
-    preferences: initialPreferences,
+    currentSemester: 'fall',
+    preferences: {
+        fall: initialPreferences,
+        winter: JSON.parse(JSON.stringify(initialPreferences))
+    },
     isGenerating: false,
+
+    // Semester Actions
+    switchSemester: (semester: Semester) => set({ currentSemester: semester }),
+    
+    getCurrentPreferences: () => {
+        const state = get();
+        return state.preferences[state.currentSemester];
+    },
 
     // Course Actions
     addCourse: () => set((state) => {
+        const currentPrefs = state.preferences[state.currentSemester];
         // Only allow up to 7 courses
-        if (state.preferences.courses.length >= 7) return state;
+        if (currentPrefs.courses.length >= 7) return state;
         return {
             preferences: {
                 ...state.preferences,
-                courses: [
-                    ...state.preferences.courses,
-                    { courseCode: '', preferredInstructor: '', sectionTypes: [] }
-                ]
+                [state.currentSemester]: {
+                    ...currentPrefs,
+                    courses: [
+                        ...currentPrefs.courses,
+                        { courseCode: '', preferredInstructor: '', sectionTypes: [] }
+                    ]
+                }
             }
         };
     }),
 
     removeCourse: (index) => set((state) => {
+        const currentPrefs = state.preferences[state.currentSemester];
         // Don't remove if it's the only course
-        if (state.preferences.courses.length <= 1) return state;
+        if (currentPrefs.courses.length <= 1) return state;
         return {
             preferences: {
                 ...state.preferences,
-                courses: state.preferences.courses.filter((_, i) => i !== index)
+                [state.currentSemester]: {
+                    ...currentPrefs,
+                    courses: currentPrefs.courses.filter((_, i) => i !== index)
+                }
             }
         };
     }),
 
     updateCourse: (index, course) => set((state) => {
-        const newCourses = [...state.preferences.courses];
+        const currentPrefs = state.preferences[state.currentSemester];
+        const newCourses = [...currentPrefs.courses];
         newCourses[index] = course;
         return {
             preferences: {
                 ...state.preferences,
-                courses: newCourses
+                [state.currentSemester]: {
+                    ...currentPrefs,
+                    courses: newCourses
+                }
             }
         };
     }),
 
     updateCourseCode: (index, code) => set((state) => {
-        const newCourses = [...state.preferences.courses];
+        const currentPrefs = state.preferences[state.currentSemester];
+        const newCourses = [...currentPrefs.courses];
         newCourses[index] = { ...newCourses[index], courseCode: code };
         return {
             preferences: {
                 ...state.preferences,
-                courses: newCourses
+                [state.currentSemester]: {
+                    ...currentPrefs,
+                    courses: newCourses
+                }
             }
         };
     }),
 
     updatePreferredInstructor: (index, instructor) => set((state) => {
-        const newCourses = [...state.preferences.courses];
+        const currentPrefs = state.preferences[state.currentSemester];
+        const newCourses = [...currentPrefs.courses];
         newCourses[index] = { ...newCourses[index], preferredInstructor: instructor };
         return {
             preferences: {
                 ...state.preferences,
-                courses: newCourses
+                [state.currentSemester]: {
+                    ...currentPrefs,
+                    courses: newCourses
+                }
             }
         };
     }),
 
     updateSectionTypes: (index, sectionTypes) => set((state) => {
-        const newCourses = [...state.preferences.courses];
+        const currentPrefs = state.preferences[state.currentSemester];
+        const newCourses = [...currentPrefs.courses];
         newCourses[index] = { ...newCourses[index], sectionTypes };
         return {
             preferences: {
                 ...state.preferences,
-                courses: newCourses
+                [state.currentSemester]: {
+                    ...currentPrefs,
+                    courses: newCourses
+                }
             }
         };
     }),
 
     // Buffer Time Actions
-    updateBufferTime: (bufferTime) => set((state) => ({
-        preferences: {
-            ...state.preferences,
-            bufferTime
-        }
-    })),
+    updateBufferTime: (bufferTime) => set((state) => {
+        const currentPrefs = state.preferences[state.currentSemester];
+        return {
+            preferences: {
+                ...state.preferences,
+                [state.currentSemester]: {
+                    ...currentPrefs,
+                    bufferTime
+                }
+            }
+        };
+    }),
 
     // Availability Actions
     updateDayAvailability: (day, times) => set((state) => {
-        const newAvailability = state.preferences.dailyAvailability.map((dayAvail) =>
+        const currentPrefs = state.preferences[state.currentSemester];
+        const newAvailability = currentPrefs.dailyAvailability.map((dayAvail) =>
             dayAvail.day === day ? { ...dayAvail, availableTimes: times } : dayAvail
         );
         return {
             preferences: {
                 ...state.preferences,
-                dailyAvailability: newAvailability
+                [state.currentSemester]: {
+                    ...currentPrefs,
+                    dailyAvailability: newAvailability
+                }
             }
         };
     }),
 
     updateMaxClassesPerDay: (day, max) => set((state) => {
-        const newAvailability = state.preferences.dailyAvailability.map((dayAvail) =>
+        const currentPrefs = state.preferences[state.currentSemester];
+        const newAvailability = currentPrefs.dailyAvailability.map((dayAvail) =>
             dayAvail.day === day ? { ...dayAvail, maxClassesPerDay: max } : dayAvail
         );
         return {
             preferences: {
                 ...state.preferences,
-                dailyAvailability: newAvailability
+                [state.currentSemester]: {
+                    ...currentPrefs,
+                    dailyAvailability: newAvailability
+                }
             }
         };
     }),
@@ -161,28 +220,38 @@ export const useSchedulerStore = create<SchedulerState>((set, get) => ({
         // Clear any existing schedule
         useScheduleStore.getState().clearSchedule();
         
-        // Reset just the availability and buffer time settings
-        set((state) => ({
-            preferences: {
-                ...state.preferences,
-                bufferTime: initialPreferences.bufferTime,
-                dailyAvailability: JSON.parse(JSON.stringify(initialPreferences.dailyAvailability))
-            }
-        }));
+        // Reset just the availability and buffer time settings for current semester
+        set((state) => {
+            const currentPrefs = state.preferences[state.currentSemester];
+            return {
+                preferences: {
+                    ...state.preferences,
+                    [state.currentSemester]: {
+                        ...currentPrefs,
+                        bufferTime: initialPreferences.bufferTime,
+                        dailyAvailability: JSON.parse(JSON.stringify(initialPreferences.dailyAvailability))
+                    }
+                }
+            };
+        });
     },
     
-    // Reset all preferences to default values
+    // Reset all preferences to default values for current semester
     resetPreferences: () => {
         // Clear any existing schedule
         useScheduleStore.getState().clearSchedule();
         
-        // Reset preferences to initial defaults
-        set({ 
-            preferences: JSON.parse(JSON.stringify(initialPreferences))
-        });    },
+        // Reset preferences to initial defaults for current semester
+        set((state) => ({
+            preferences: {
+                ...state.preferences,
+                [state.currentSemester]: JSON.parse(JSON.stringify(initialPreferences))
+            }
+        }));
+    },
     // Schedule Generation
     generateSchedule: async () => {
-        const prefs = get().preferences;
+        const prefs = get().getCurrentPreferences();
         
         // Check if any courses have been entered
         const hasValidCourses = prefs.courses.some(course => course.courseCode?.trim().length > 0);

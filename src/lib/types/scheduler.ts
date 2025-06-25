@@ -6,6 +6,8 @@ export type BufferTime = 'No preference' | '30m' | '1h' | '1h+';
 
 export type DayOfWeek = 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday';
 
+export type Semester = 'fall' | 'winter';
+
 export interface CoursePreference {
     courseCode: string;
     preferredInstructor: string;
