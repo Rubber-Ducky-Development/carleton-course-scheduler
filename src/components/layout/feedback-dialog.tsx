@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 export function FeedbackDialog() {
   const [isOpen, setIsOpen] = useState(false);
   const [feedback, setFeedback] = useState('');
+  const [email, setEmail] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
@@ -16,6 +17,7 @@ export function FeedbackDialog() {
     // Reset the form after a short delay to ensure the closing animation plays
     setTimeout(() => {
       setFeedback('');
+      setEmail('');
       setError(null);
       setSuccess(false);
     }, 300);
@@ -47,7 +49,7 @@ export function FeedbackDialog() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ feedback }),
+        body: JSON.stringify({ feedback, email }),
       });
 
       if (!response.ok) {
@@ -57,6 +59,7 @@ export function FeedbackDialog() {
 
       setSuccess(true);
       setFeedback('');
+      setEmail('');
       
       // Close the dialog after a delay
       setTimeout(() => {
@@ -132,10 +135,29 @@ export function FeedbackDialog() {
                   <form onSubmit={handleSubmit} className="mt-4">
                     <div className="space-y-4">
                       <div>
+                        <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+                          Email (optional)
+                        </label>
+                        <input
+                          id="email"
+                          type="email"
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                          placeholder="So we can reach out about a bug fix if you request one."
+                          className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-0 disabled:cursor-not-allowed disabled:opacity-50"
+                          disabled={isSubmitting}
+                        />
+                      </div>
+                      
+                      <div>
+                        <label htmlFor="feedback" className="block text-sm font-medium text-gray-700 mb-1">
+                          Feedback
+                        </label>
                         <textarea
+                          id="feedback"
                           value={feedback}
                           onChange={(e) => setFeedback(e.target.value)}
-                          placeholder="Enter your feedback here..."
+                          placeholder="Thank you for using Termwise. You're awesome."
                           className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-0 disabled:cursor-not-allowed disabled:opacity-50 min-h-[150px]"
                           maxLength={characterLimit}
                           disabled={isSubmitting}
