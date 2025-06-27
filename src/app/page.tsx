@@ -33,8 +33,9 @@ export default function Home() {
       <Header />
 
       <main className="flex-1 px-4 py-6 sm:px-6 lg:px-8">        <div className="mx-auto max-w-7xl">          <div className="mb-5 text-center">
-        <h1 className="mb-2 text-3xl font-bold text-gray-800 sm:text-4xl">
-          Termwise <span className="text-indigo-600">🌟</span>
+        <h1 className="mb-2 text-3xl font-bold text-gray-800 sm:text-4xl flex items-center justify-center gap-2">
+          Termwise 
+          <img src="/emoji.svg" alt="Termwise emoji" className="w-8 h-8 sm:w-10 sm:h-10" />
         </h1>
         <p className="text-base text-gray-600 max-w-lg mx-auto">
           Enter your preferences to generate an optimal schedule
