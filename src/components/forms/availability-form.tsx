@@ -17,8 +17,9 @@ interface AvailabilityDayProps {
 
 // Export the component so it can be used directly
 export function AvailabilityDayForm({ day }: AvailabilityDayProps) {
-    const { preferences, updateDayAvailability, updateMaxClassesPerDay } = useSchedulerStore();
+    const { getCurrentPreferences, updateDayAvailability, updateMaxClassesPerDay } = useSchedulerStore();
 
+    const preferences = getCurrentPreferences();
     const dayAvailability = preferences.dailyAvailability.find((d) => d.day === day);
 
     if (!dayAvailability) return null;    const handleTimeChange = (time: TimeOfDay, checked: boolean) => {

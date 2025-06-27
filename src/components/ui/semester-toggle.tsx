@@ -23,7 +23,7 @@ export function SemesterToggle({ currentSemester, onSemesterChange, className }:
         )}
         aria-pressed={currentSemester === 'fall'}
       >
-        Fall 2024
+        Fall 2025
       </button>
       <button
         onClick={() => onSemesterChange('winter')}
@@ -35,7 +35,7 @@ export function SemesterToggle({ currentSemester, onSemesterChange, className }:
         )}
         aria-pressed={currentSemester === 'winter'}
       >
-        Winter 2025
+        Winter 2026
       </button>
     </div>
   );

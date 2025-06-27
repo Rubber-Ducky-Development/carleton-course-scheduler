@@ -12,7 +12,9 @@ const bufferOptions = [
 ];
 
 export function BufferTimeForm() {
-    const { preferences, updateBufferTime } = useSchedulerStore();
+    const { getCurrentPreferences, updateBufferTime } = useSchedulerStore();
+    
+    const preferences = getCurrentPreferences();
     
     return (
         <div className="h-full">
