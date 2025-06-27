@@ -38,7 +38,7 @@ export function SemesterToggle({ currentSemester, onSemesterChange, className }:
   }, [currentSemester]);
 
   return (
-        <div className={cn("flex items-center bg-gray-200 rounded-lg min-h-[40px] p-1 relative overflow-hidden", className)}>
+        <div className={cn("flex items-center bg-[var(--toggle-bg)] rounded-lg min-h-[40px] p-1 relative overflow-hidden", className)}>
 
       {/* Animated background slider */}
       <div

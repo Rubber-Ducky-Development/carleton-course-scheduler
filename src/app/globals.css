@@ -43,6 +43,7 @@ html.light {
   --shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.04), 0 1px 2px -1px rgba(0, 0, 0, 0.02);
   --shadow-hover: 0 4px 6px -2px rgba(0, 0, 0, 0.04), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
   --border-radius: 0.5rem;
+  --toggle-bg: #e5e7eb; /* gray-200 for light mode */
 }
 
 /* Global variables */
@@ -127,6 +128,7 @@ body {
   --text-dark: #f1f5f9;
   --shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.3), 0 1px 2px -1px rgba(0, 0, 0, 0.2);
   --shadow-hover: 0 4px 6px -2px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+  --toggle-bg: #1C2028; /* dark gray for dark mode */
 }
 
 /* Dark theme overrides for custom styles */
