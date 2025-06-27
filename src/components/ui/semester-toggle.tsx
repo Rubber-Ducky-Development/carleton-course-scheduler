@@ -38,7 +38,7 @@ export function SemesterToggle({ currentSemester, onSemesterChange, className }:
   }, [currentSemester]);
 
   return (
-        <div className={cn("flex items-center bg-[var(--toggle-bg)] rounded-lg min-h-[40px] p-1 relative overflow-hidden", className)}>
+    <div className={cn("flex items-center bg-[var(--toggle-bg)] rounded-lg min-h-[40px] p-1 relative overflow-hidden", className)}>
 
       {/* Animated background slider */}
       <div
@@ -51,11 +51,12 @@ export function SemesterToggle({ currentSemester, onSemesterChange, className }:
         ref={fallRef}
         onClick={() => onSemesterChange('fall')}
         className={cn(
-          "px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 relative z-10",
+          "px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 relative",
           currentSemester === 'fall'
             ? "text-indigo-600"
             : "text-gray-600 hover:text-gray-800"
         )}
+        style={{ zIndex: 1 }}
         aria-pressed={currentSemester === 'fall'}
       >
         Fall 2025
@@ -64,11 +65,12 @@ export function SemesterToggle({ currentSemester, onSemesterChange, className }:
         ref={winterRef}
         onClick={() => onSemesterChange('winter')}
         className={cn(
-          "px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 relative z-10",
+          "px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 relative",
           currentSemester === 'winter'
             ? "text-indigo-600"
             : "text-gray-600 hover:text-gray-800"
         )}
+        style={{ zIndex: 1 }}
         aria-pressed={currentSemester === 'winter'}
       >
         Winter 2026
