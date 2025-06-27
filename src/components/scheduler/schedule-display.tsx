@@ -299,7 +299,7 @@ export function ScheduleDisplay() {
       )}      {hasAlternatives && (
         <div className="mt-6 p-4 rounded-xl bg-indigo-50/50 border border-indigo-100">          
           <p className="text-sm text-indigo-700">
-            We&apos;ve generated {alternativeSchedules.length} alternative schedule{alternativeSchedules.length > 1 ? 's' : ''} that might suit your preferences.
+            We&apos;ve generated {alternativeSchedules.length} alternative schedule{alternativeSchedules.length > 1 ? 's' : ''} that might suit your preferences.<br></br>Calendar view may not always show all courses, especially online unscheduled ones. Switch to list view to view all courses.
           </p>
         </div>
       )}
