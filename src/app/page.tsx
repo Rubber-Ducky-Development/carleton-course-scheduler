@@ -44,8 +44,8 @@ export default function Home() {
 
         {/* Notice Banner */}
         <div className="max-w-4xl mx-auto mb-6">
-          <NoticeBanner type="warning" title={`${currentSemester === 'fall' ? 'Fall 2025' : 'Winter 2026'} Limited Availability`}>
-            Some lectures, labs, and tutorials may be missing, as Carleton has not finalized all courses. Course availability here does not guarantee space or access on Carleton Central. Specific sections can be specified during course selection below.
+          <NoticeBanner type="error" title="Winter 2026 Limited Availability">
+            Winter course data has not been refreshed for several months, and some site features may not work as expected. Please avoid relying on this information. A comprehensive update will be available soon.
           </NoticeBanner>
         </div>
 
