@@ -44,8 +44,12 @@ export default function Home() {
 
         {/* Notice Banner */}
         <div className="max-w-4xl mx-auto mb-6">
-          <NoticeBanner type="error" title="Winter 2026 Limited Availability">
-            Winter course data has not been refreshed for several months, and some site features may not work as expected. Please avoid relying on this information. A comprehensive update will be available soon.
+          <NoticeBanner type="info" title="Termwise Development Update">
+            Development is currently in progress for Fall 2026 and Winter 2027, and Termwise is projected to be updated really soon. Updates will be posted on{' '}
+            <a href="https://www.linkedin.com/in/nathantann/" className="font-medium underline underline-offset-2 hover:text-blue-600" target="_blank" rel="noopener noreferrer">
+              LinkedIn
+            </a>
+            .
           </NoticeBanner>
         </div>
 
