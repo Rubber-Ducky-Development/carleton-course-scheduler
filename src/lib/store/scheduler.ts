@@ -269,54 +269,54 @@ export const useSchedulerStore = create<SchedulerState>((set, get) => ({
             return;
         }
 
-        set({ isGenerating: true }); try {
-            // First, validate courses exist before sending to the Edge Function
-            const validateUrl = '/api/validate-courses';
-
-            const validationResult = await fetch(validateUrl, {
+        set({ isGenerating: true });
+        try {
+            const validationResponse = await fetch('/api/validate-courses', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-Term': get().currentSemester // Pass current semester
+                    'X-Term': get().currentSemester,
                 },
                 body: JSON.stringify({ courses: prefs.courses }),
             });
-            if (!validationResult.ok) {
-                const errorData = await validationResult.json();
-                toast.error(errorData.error || "Failed to validate courses");
+
+            if (!validationResponse.ok) {
+                const errorData = await validationResponse.json().catch(() => ({}));
+                toast.error(errorData.error || 'Failed to validate courses');
                 set({ isGenerating: false });
                 return;
             }
-            const validation = await validationResult.json();
+
+            const validation = await validationResponse.json();
 
             if (validation.invalidCourses && validation.invalidCourses.length > 0) {
                 toast.error(validation.message || `The following courses were not found: ${validation.invalidCourses.join(', ')}`);
                 set({ isGenerating: false });
                 return;
             }
-            // Proceed with schedule generation if validation passes
-            const apiUrl = '/api/generate-schedule';
 
-            const headers: HeadersInit = {
-                'Content-Type': 'application/json',
-                'X-Term': get().currentSemester // Pass current semester
-            };
-            const response = await fetch(apiUrl, {
+            const scheduleResponse = await fetch('/api/generate-schedule', {
                 method: 'POST',
-                headers,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Term': get().currentSemester,
+                },
                 body: JSON.stringify(prefs),
             });
 
-            if (!response.ok) {
-                const errorText = await response.text(); throw new Error(`Error ${response.status}: ${errorText}`);
-            } const result = await response.json();
+            if (!scheduleResponse.ok) {
+                const errorData = await scheduleResponse.json().catch(() => ({}));
+                throw new Error(errorData.error || `Error ${scheduleResponse.status}`);
+            }
+
+            const result = await scheduleResponse.json();
             // Update the schedule store with the generated schedule and alternatives
             useScheduleStore.getState().setSchedule(
                 result.courses,
                 result.alternativeSchedules || null,
                 !!result.demo,
                 result.message || null
-            );// Log the primary schedule courses            // Course mapping is done directly in the setSchedule method
+            );
             // Show success toast with hint about viewing more details
             toast.success(
                 window.innerWidth <= 768

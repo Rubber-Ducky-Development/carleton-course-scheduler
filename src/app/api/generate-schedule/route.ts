@@ -1,32 +1,43 @@
-
-
 import { NextRequest, NextResponse } from 'next/server';
-import { SchedulerPreferences } from '@/lib/types/scheduler';
+import { callEdgeFunction, normalizeSemester } from '@/lib/server/edge-function-proxy';
 
-// Simple in-memory rate limiting storage
-// In a production environment with multiple instances, you'd want to use Redis or similar
-const ipRequestCounts = new Map<string, { count: number, resetTime: number }>();
-const RATE_LIMIT_MAX = 30; // requests per window
-const RATE_LIMIT_WINDOW = 60 * 1000; // 1 minute in milliseconds
+export const runtime = 'nodejs';
 
-// Helper function to check rate limits
-const checkRateLimit = (ip: string): { allowed: boolean, limit: number, remaining: number } => {
+const ipRequestCounts = new Map<string, { count: number; resetTime: number }>();
+const RATE_LIMIT_MAX = 30;
+const RATE_LIMIT_WINDOW = 60 * 1000;
+
+function corsHeaders() {
+  const allowedOrigins = process.env.NODE_ENV === 'production'
+    ? ['https://carleton-course-scheduler.vercel.app']
+    : ['http://localhost:3000'];
+
+  const origin = process.env.SITE_URL || allowedOrigins[0];
+
+  return {
+    'Access-Control-Allow-Origin': origin,
+    'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Term',
+    Vary: 'Origin',
+  };
+}
+
+function clientIp(request: NextRequest) {
+  const forwardedFor = request.headers.get('x-forwarded-for') ?? request.headers.get('x-real-ip') ?? 'unknown-ip';
+  return forwardedFor.split(',')[0].trim() || 'unknown-ip';
+}
+
+function checkRateLimit(ip: string) {
   const now = Date.now();
-
-  // Get or initialize rate limit info for this IP
   let rateInfo = ipRequestCounts.get(ip);
   if (!rateInfo || now > rateInfo.resetTime) {
     rateInfo = { count: 0, resetTime: now + RATE_LIMIT_WINDOW };
     ipRequestCounts.set(ip, rateInfo);
   }
 
-  // Increment the count and check if we're over the limit
-  rateInfo.count++;
-  const allowed = rateInfo.count <= RATE_LIMIT_MAX;
-  const remaining = Math.max(0, RATE_LIMIT_MAX - rateInfo.count);
+  rateInfo.count += 1;
 
-  // Cleanup old entries periodically to prevent memory leaks
-  if (ipRequestCounts.size > 10000) { // Arbitrary cleanup threshold
+  if (ipRequestCounts.size > 5000) {
     const cleanupTime = now - RATE_LIMIT_WINDOW;
     for (const [key, value] of ipRequestCounts.entries()) {
       if (value.resetTime < cleanupTime) {
@@ -35,36 +46,67 @@ const checkRateLimit = (ip: string): { allowed: boolean, limit: number, remainin
     }
   }
 
-  return { allowed, limit: RATE_LIMIT_MAX, remaining };
-};
+  return {
+    allowed: rateInfo.count <= RATE_LIMIT_MAX,
+    limit: RATE_LIMIT_MAX,
+    remaining: Math.max(0, RATE_LIMIT_MAX - rateInfo.count),
+  };
+}
 
-// Helper to return appropriate CORS headers
-const corsHeaders = () => {
-  // In production, restrict to specific origins
-  const allowedOrigins = process.env.NODE_ENV === 'production'
-    ? ['https://termwise.ca']
-    : ['http://localhost:3000'];
+function normalizePreferences(input: unknown) {
+  if (!input || typeof input !== 'object') {
+    return null;
+  }
 
-  // Get the origin from environment or default to first allowed origin
-  const origin = process.env.SITE_URL || allowedOrigins[0];
+  const preferences = input as {
+    courses?: unknown;
+    bufferTime?: unknown;
+    dailyAvailability?: unknown;
+    semester?: unknown;
+    termCode?: unknown;
+    keyword?: unknown;
+    level?: unknown;
+  };
+
+  const courses = Array.isArray(preferences.courses)
+    ? preferences.courses.filter((course): course is { courseCode?: string; preferredInstructor?: string; sectionTypes?: string[] } => Boolean(course) && typeof course === 'object')
+      .map((course) => ({
+        courseCode: typeof course.courseCode === 'string' ? course.courseCode.trim() : '',
+        preferredInstructor: typeof course.preferredInstructor === 'string' ? course.preferredInstructor.trim() : '',
+        sectionTypes: Array.isArray(course.sectionTypes) ? course.sectionTypes.filter((type): type is string => typeof type === 'string') : [],
+      }))
+      .filter((course) => course.courseCode.length > 0)
+    : [];
+
+  const dailyAvailability = Array.isArray(preferences.dailyAvailability)
+    ? preferences.dailyAvailability
+      .filter((entry): entry is { day?: string; availableTimes?: string[]; maxClassesPerDay?: number } => Boolean(entry) && typeof entry === 'object')
+      .map((entry) => ({
+        day: typeof entry.day === 'string' ? entry.day : '',
+        availableTimes: Array.isArray(entry.availableTimes) ? entry.availableTimes.filter((time): time is string => typeof time === 'string') : [],
+        maxClassesPerDay: typeof entry.maxClassesPerDay === 'number' ? entry.maxClassesPerDay : 7,
+      }))
+    : [];
+
+  if (courses.length === 0) {
+    return null;
+  }
 
   return {
-    'Access-Control-Allow-Origin': origin,
-    'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Term'
+    courses,
+    bufferTime: typeof preferences.bufferTime === 'string' ? preferences.bufferTime : 'No preference',
+    dailyAvailability,
+    semester: typeof preferences.semester === 'string' ? preferences.semester : undefined,
+    termCode: typeof preferences.termCode === 'string' ? preferences.termCode.trim() : undefined,
+    keyword: typeof preferences.keyword === 'string' ? preferences.keyword : undefined,
+    level: typeof preferences.level === 'string' ? preferences.level : undefined,
   };
-};
-
-// This API route is a proxy to the Supabase Edge Function
-// It forwards the request from the client to the Supabase Edge Function
-// and returns the response back to the client
+}
 
 export async function POST(request: NextRequest) {
-  // Get client IP for rate limiting
-  const ip = request.headers.get('x-forwarded-for') || 'unknown-ip';
-
-  // Check rate limit
+  const ip = clientIp(request);
   const rateLimit = checkRateLimit(ip);
+
   if (!rateLimit.allowed) {
     return NextResponse.json(
       { error: 'Too many requests. Please try again later.' },
@@ -74,150 +116,67 @@ export async function POST(request: NextRequest) {
           ...corsHeaders(),
           'X-RateLimit-Limit': rateLimit.limit.toString(),
           'X-RateLimit-Remaining': '0',
-          'Retry-After': '60'
-        }
+          'Retry-After': '60',
+        },
       }
     );
   }
 
   try {
-    // Parse the request body
-    const preferences: SchedulerPreferences = await request.json();
+    const body = await request.json() as unknown;
+    const preferences = normalizePreferences(body);
 
-    // Extract semester from X-Term header
-    const semester = request.headers.get('x-term') as 'fall' | 'winter' | null;
-
-    // Validate semester parameter
-    if (!semester || !['fall', 'winter'].includes(semester)) {
-      return NextResponse.json(
-        { error: 'Invalid or missing semester. X-Term header must be either "fall" or "winter"' },
-        { status: 400, headers: corsHeaders() }
-      );
+    if (!preferences) {
+      return NextResponse.json({ error: 'At least one course is required' }, { status: 400, headers: corsHeaders() });
     }
 
-    // Basic input validation
-    if (!preferences || typeof preferences !== 'object') {
-      return NextResponse.json({ error: 'Invalid request format' }, { status: 400 });
-    }
+    const semester = normalizeSemester(request.headers.get('x-term') ?? preferences.semester);
 
-    // Validate that required fields exist
-    if (!Array.isArray(preferences.courses) || preferences.courses.length === 0) {
-      return NextResponse.json({ error: 'At least one course is required' }, { status: 400 });
-    }
-
-    // Validate courses format
     for (const course of preferences.courses) {
-      if (!course || typeof course !== 'object' || typeof course.courseCode !== 'string' || !course.courseCode.trim()) {
-        return NextResponse.json({ error: 'Invalid course format' }, { status: 400 });
+      if (typeof course.courseCode !== 'string' || !course.courseCode.trim()) {
+        return NextResponse.json({ error: 'Invalid course format' }, { status: 400, headers: corsHeaders() });
       }
 
-      // Validate section types if provided
-      if (course.sectionTypes && (!Array.isArray(course.sectionTypes) ||
-        !course.sectionTypes.every(type => ['Online', 'Hybrid', 'In-Person'].includes(type)))) {
-        return NextResponse.json({ error: 'Invalid section types' }, { status: 400 });
-      }
-    }
-    // Validate buffer time if provided
-    if (preferences.bufferTime &&
-      !['No Buffer', '30 Minutes', '1 Hour', '1+ Hours', 'No preference', '30m', '1h', '1h+'].includes(preferences.bufferTime)) {
-      return NextResponse.json({ error: `Invalid buffer time: ${preferences.bufferTime}` }, { status: 400 });
-    }
-
-    // Validate availability data if provided
-    if (preferences.dailyAvailability) {
-      if (!Array.isArray(preferences.dailyAvailability)) {
-        return NextResponse.json({ error: 'Invalid availability format' }, { status: 400 });
-      }
-
-      const validDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
-      for (const dayData of preferences.dailyAvailability) {
-        if (!dayData.day || !validDays.includes(dayData.day)) {
-          return NextResponse.json({ error: `Invalid day in availability` }, { status: 400 });
-        }
-
-        if (!Array.isArray(dayData.availableTimes)) {
-          return NextResponse.json({ error: `Invalid available times format` }, { status: 400 });
-        }
-
-        if (typeof dayData.maxClassesPerDay !== 'number' || dayData.maxClassesPerDay < 0) {
-          return NextResponse.json({ error: `Invalid max classes per day` }, { status: 400 });
-        }
+      if (course.sectionTypes?.length && !course.sectionTypes.every((type) => ['Online', 'Hybrid', 'In-Person'].includes(type))) {
+        return NextResponse.json({ error: 'Invalid section types' }, { status: 400, headers: corsHeaders() });
       }
     }
 
-    // Check if we have the required environment variables
-    if (!process.env.SUPABASE_EDGE_FUNCTION_URL || !process.env.SUPABASE_ANON_KEY || !process.env.API_KEY) {
-      console.error('Missing required environment variables');
-      return NextResponse.json(
-        { error: 'Server error - Unable to process request' },
-        {
-          status: 500,
-          headers: {
-            'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-            'Access-Control-Allow-Headers': 'Content-Type, Authorization'
-          }
-        }
-      );
+    const validBufferTimes = ['No Buffer', '30 Minutes', '1 Hour', '1+ Hours', 'No preference', '30m', '1h', '1h+'];
+    if (preferences.bufferTime && !validBufferTimes.includes(preferences.bufferTime)) {
+      return NextResponse.json({ error: `Invalid buffer time: ${preferences.bufferTime}` }, { status: 400, headers: corsHeaders() });
     }
-    // Send the request to the Supabase Edge Function
-    const supabaseUrl = `${process.env.SUPABASE_EDGE_FUNCTION_URL}/filter-courses`;
 
-    // Prepare the request payload with semester information
-    const requestData = {
+    const validDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+    for (const dayData of preferences.dailyAvailability) {
+      if (dayData.day && !validDays.includes(dayData.day)) {
+        return NextResponse.json({ error: 'Invalid day in availability' }, { status: 400, headers: corsHeaders() });
+      }
+
+      if (!Array.isArray(dayData.availableTimes)) {
+        return NextResponse.json({ error: 'Invalid available times format' }, { status: 400, headers: corsHeaders() });
+      }
+
+      if (typeof dayData.maxClassesPerDay !== 'number' || dayData.maxClassesPerDay < 0) {
+        return NextResponse.json({ error: 'Invalid max classes per day' }, { status: 400, headers: corsHeaders() });
+      }
+    }
+
+    const data = await callEdgeFunction('filter-courses', {
       ...preferences,
-      semester: semester,
-      keyword: semester === 'fall' ? 'fall' : 'winter' // Add keyword for database selection
-    };
+      semester,
+      keyword: semester,
+    }, semester);
 
-    const response = await fetch(supabaseUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${process.env.SUPABASE_ANON_KEY}`,
-        'x-api-key': process.env.API_KEY,
-        'X-Term': semester // Pass semester in header to backend
-      },
-      body: JSON.stringify(requestData),
-    });
-    // Check if the response was successful
-    if (!response.ok) {
-      const errorResponse = await response.text();
-      console.error(`Error from Edge Function: ${response.status}`, errorResponse);
-
-      // Generic error message to avoid leaking implementation details
-      return NextResponse.json(
-        { error: 'Unable to generate schedule. Please try again with different preferences.' },
-        {
-          status: response.status,
-          headers: corsHeaders()
-        }
-      );
-    }
-    // Return the response from the Edge Function
-    const data = await response.json();
-
-    return NextResponse.json(data, {
-      headers: corsHeaders()
-    });
+    return NextResponse.json(data, { headers: corsHeaders() });
   } catch (error) {
-    // Log full error details server-side but return generic message to client
     console.error('Error in API route:', error);
-
-    return NextResponse.json(
-      { error: 'An unexpected error occurred. Please try again.' },
-      {
-        status: 500,
-        headers: corsHeaders()
-      }
-    );
+    const message = error instanceof Error ? error.message : 'Unknown error';
+    const status = message.includes('Invalid or missing semester') ? 400 : 500;
+    return NextResponse.json({ error: 'An unexpected error occurred. Please try again.', details: message }, { status, headers: corsHeaders() });
   }
 }
 
-// Add OPTIONS handler for CORS preflight requests
 export async function OPTIONS() {
-  return new NextResponse(null, {
-    status: 200,
-    headers: corsHeaders()
-  });
+  return new NextResponse(null, { status: 200, headers: corsHeaders() });
 }
