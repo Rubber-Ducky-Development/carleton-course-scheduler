@@ -14,18 +14,15 @@ function getEdgeFunctionBaseUrl() {
 }
 
 function getServerAuthHeaders() {
-  const authKey = process.env.SUPABASE_SERVICE_ROLE_KEY ?? process.env.SUPABASE_ANON_KEY ?? process.env.API_KEY;
+  const authKey = process.env.EDGE_FUNCTION_API_KEY ?? process.env.API_KEY;
+
+  if (!authKey) {
+    throw new Error('Missing shared secret for edge function requests');
+  }
+
   const headers: Record<string, string> = {};
 
-  if (authKey) {
-    headers.Authorization = `Bearer ${authKey}`;
-    headers.apikey = authKey;
-  }
-
-  const apiKey = process.env.API_KEY;
-  if (apiKey) {
-    headers['x-api-key'] = apiKey;
-  }
+  headers['x-api-key'] = authKey;
 
   return headers;
 }
