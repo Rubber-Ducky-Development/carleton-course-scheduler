@@ -8,6 +8,7 @@ import { SchedulerForm } from '@/components/forms/scheduler-form';
 import { ScheduleDisplay } from '@/components/scheduler/schedule-display';
 import { Header } from '@/components/layout/header';
 import { NoticeBanner } from '@/components/ui/notice-banner';
+import { AcademicLevelToggle } from '@/components/ui/academic-level-toggle';
 import { SemesterToggle } from '@/components/ui/semester-toggle';
 import { useSchedulerStore } from '@/lib/store/scheduler';
 import { useScheduleStore } from '@/lib/store/schedule';
@@ -15,18 +16,28 @@ import { useScheduleStore } from '@/lib/store/schedule';
 export default function Home() {
   const {
     currentSemester,
-    switchSemester,
+    currentTermYear,
+    currentLevel,
+    setAcademicTerm,
     getCurrentPreferences,
     addCourse
   } = useSchedulerStore();
 
-  const { setSemester } = useScheduleStore();
+  const { setSemester, clearSchedule } = useScheduleStore();
 
   const preferences = getCurrentPreferences();
 
+  const getYearForSemester = (semester: typeof currentSemester) => (semester === 'fall' ? 2026 : 2027) as 2026 | 2027;
+
   const handleSemesterChange = (semester: typeof currentSemester) => {
-    switchSemester(semester);
+    setAcademicTerm({ season: semester, year: getYearForSemester(semester), level: currentLevel });
     setSemester(semester);
+    clearSchedule();
+  };
+
+  const handleLevelChange = (level: typeof currentLevel) => {
+    setAcademicTerm({ season: currentSemester, year: currentTermYear, level });
+    clearSchedule();
   };
   return (
     <div className="flex min-h-screen flex-col">
@@ -53,8 +64,9 @@ export default function Home() {
           </NoticeBanner>
         </div>
 
-        {/* Semester Toggle */}
-        <div className="max-w-4xl mx-auto mb-6">
+        {/* Term Switchers */}
+        <div className="max-w-4xl mx-auto mb-6 space-y-3">
+          <AcademicLevelToggle currentLevel={currentLevel} onLevelChange={handleLevelChange} />
           <div className="flex justify-center">
             <SemesterToggle
               currentSemester={currentSemester}

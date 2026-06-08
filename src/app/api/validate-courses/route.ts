@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { callEdgeFunction, normalizeSemester } from '@/lib/server/edge-function-proxy';
+import type { AcademicTerm, TermLevel } from '@/lib/types/scheduler';
 
 export const runtime = 'nodejs';
 
@@ -13,7 +14,7 @@ const corsHeaders = () => {
   return {
     'Access-Control-Allow-Origin': origin,
     'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Term',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Term, X-Term-Year, X-Level',
     Vary: 'Origin',
   };
 };
@@ -33,10 +34,37 @@ function normalizeCourses(input: unknown) {
     .filter((course) => course.courseCode.length > 0);
 }
 
+function normalizeTermYear(input: unknown): 2026 | 2027 {
+  if (input === 2026 || input === 2027) {
+    return input;
+  }
+
+  if (typeof input === 'string') {
+    const parsed = Number.parseInt(input, 10);
+    if (parsed === 2026 || parsed === 2027) {
+      return parsed;
+    }
+  }
+
+  return 2026;
+}
+
+function normalizeLevel(input: unknown): TermLevel {
+  if (input === 'undergraduate' || input === 'graduate') {
+    return input;
+  }
+
+  return 'undergraduate';
+}
+
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json() as { courses?: unknown; semester?: unknown; termCode?: unknown };
-    const semester = normalizeSemester(req.headers.get('x-term') ?? body.semester);
+    const body = await req.json() as { courses?: unknown; semester?: unknown; termYear?: unknown; level?: unknown; termCode?: unknown };
+    const term: AcademicTerm = {
+      season: normalizeSemester(req.headers.get('x-term') ?? body.semester),
+      year: normalizeTermYear(req.headers.get('x-term-year') ?? body.termYear),
+      level: normalizeLevel(req.headers.get('x-level') ?? body.level),
+    };
     const courses = normalizeCourses(body.courses);
 
     if (courses.length === 0) {
@@ -45,10 +73,12 @@ export async function POST(req: NextRequest) {
 
     const result = await callEdgeFunction('validate-courses', {
       courses,
-      semester,
-      keyword: semester,
+      semester: term.season,
+      termYear: term.year,
+      level: term.level,
+      keyword: term.season,
       ...(typeof body.termCode === 'string' && body.termCode.trim() ? { termCode: body.termCode.trim() } : {}),
-    }, semester);
+    }, term);
 
     return NextResponse.json(result, { headers: corsHeaders() });
   } catch (error) {

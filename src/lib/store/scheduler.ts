@@ -1,8 +1,10 @@
 import { create } from 'zustand';
 import {
+    AcademicTerm,
     BufferTime,
     CoursePreference,
     DayOfWeek,
+    DEFAULT_ACADEMIC_TERM,
     SchedulerPreferences,
     SectionType,
     TimeOfDay,
@@ -13,6 +15,8 @@ import { toast } from 'react-hot-toast';
 
 interface SchedulerState {
     currentSemester: Semester;
+    currentTermYear: 2026 | 2027;
+    currentLevel: 'undergraduate' | 'graduate';
     preferences: {
         fall: SchedulerPreferences;
         winter: SchedulerPreferences;
@@ -20,6 +24,7 @@ interface SchedulerState {
 
     // Semester Actions
     switchSemester: (semester: Semester) => void;
+    setAcademicTerm: (term: AcademicTerm) => void;
     getCurrentPreferences: () => SchedulerPreferences;
 
     // Course Actions
@@ -59,7 +64,9 @@ const initialPreferences: SchedulerPreferences = {
 };
 
 export const useSchedulerStore = create<SchedulerState>((set, get) => ({
-    currentSemester: 'fall',
+    currentSemester: DEFAULT_ACADEMIC_TERM.season,
+    currentTermYear: DEFAULT_ACADEMIC_TERM.year,
+    currentLevel: DEFAULT_ACADEMIC_TERM.level,
     preferences: {
         fall: initialPreferences,
         winter: JSON.parse(JSON.stringify(initialPreferences))
@@ -68,6 +75,11 @@ export const useSchedulerStore = create<SchedulerState>((set, get) => ({
 
     // Semester Actions
     switchSemester: (semester: Semester) => set({ currentSemester: semester }),
+    setAcademicTerm: (term: AcademicTerm) => set({
+        currentSemester: term.season,
+        currentTermYear: term.year,
+        currentLevel: term.level,
+    }),
 
     getCurrentPreferences: () => {
         const state = get();
@@ -276,8 +288,15 @@ export const useSchedulerStore = create<SchedulerState>((set, get) => ({
                 headers: {
                     'Content-Type': 'application/json',
                     'X-Term': get().currentSemester,
+                    'X-Term-Year': get().currentTermYear.toString(),
+                    'X-Level': get().currentLevel,
                 },
-                body: JSON.stringify({ courses: prefs.courses }),
+                body: JSON.stringify({
+                    courses: prefs.courses,
+                    semester: get().currentSemester,
+                    termYear: get().currentTermYear,
+                    level: get().currentLevel,
+                }),
             });
 
             if (!validationResponse.ok) {
@@ -300,8 +319,15 @@ export const useSchedulerStore = create<SchedulerState>((set, get) => ({
                 headers: {
                     'Content-Type': 'application/json',
                     'X-Term': get().currentSemester,
+                    'X-Term-Year': get().currentTermYear.toString(),
+                    'X-Level': get().currentLevel,
                 },
-                body: JSON.stringify(prefs),
+                body: JSON.stringify({
+                    ...prefs,
+                    semester: get().currentSemester,
+                    termYear: get().currentTermYear,
+                    level: get().currentLevel,
+                }),
             });
 
             if (!scheduleResponse.ok) {

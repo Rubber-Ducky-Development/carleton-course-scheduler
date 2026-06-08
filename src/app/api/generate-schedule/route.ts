@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { callEdgeFunction, normalizeSemester } from '@/lib/server/edge-function-proxy';
+import type { AcademicTerm, TermLevel } from '@/lib/types/scheduler';
 
 export const runtime = 'nodejs';
 
@@ -17,7 +18,7 @@ function corsHeaders() {
   return {
     'Access-Control-Allow-Origin': origin,
     'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Term',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Term, X-Term-Year, X-Level',
     Vary: 'Origin',
   };
 }
@@ -63,6 +64,7 @@ function normalizePreferences(input: unknown) {
     bufferTime?: unknown;
     dailyAvailability?: unknown;
     semester?: unknown;
+    termYear?: unknown;
     termCode?: unknown;
     keyword?: unknown;
     level?: unknown;
@@ -97,10 +99,34 @@ function normalizePreferences(input: unknown) {
     bufferTime: typeof preferences.bufferTime === 'string' ? preferences.bufferTime : 'No preference',
     dailyAvailability,
     semester: typeof preferences.semester === 'string' ? preferences.semester : undefined,
+    termYear: typeof preferences.termYear === 'number' ? preferences.termYear : undefined,
     termCode: typeof preferences.termCode === 'string' ? preferences.termCode.trim() : undefined,
     keyword: typeof preferences.keyword === 'string' ? preferences.keyword : undefined,
     level: typeof preferences.level === 'string' ? preferences.level : undefined,
   };
+}
+
+function normalizeTermYear(input: unknown): 2026 | 2027 {
+  if (input === 2026 || input === 2027) {
+    return input;
+  }
+
+  if (typeof input === 'string') {
+    const parsed = Number.parseInt(input, 10);
+    if (parsed === 2026 || parsed === 2027) {
+      return parsed;
+    }
+  }
+
+  return 2026;
+}
+
+function normalizeLevel(input: unknown): TermLevel {
+  if (input === 'undergraduate' || input === 'graduate') {
+    return input;
+  }
+
+  return 'undergraduate';
 }
 
 export async function POST(request: NextRequest) {
@@ -130,7 +156,11 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'At least one course is required' }, { status: 400, headers: corsHeaders() });
     }
 
-    const semester = normalizeSemester(request.headers.get('x-term') ?? preferences.semester);
+    const term: AcademicTerm = {
+      season: normalizeSemester(request.headers.get('x-term') ?? preferences.semester),
+      year: normalizeTermYear(request.headers.get('x-term-year') ?? preferences.termYear),
+      level: normalizeLevel(request.headers.get('x-level') ?? preferences.level),
+    };
 
     for (const course of preferences.courses) {
       if (typeof course.courseCode !== 'string' || !course.courseCode.trim()) {
@@ -164,9 +194,11 @@ export async function POST(request: NextRequest) {
 
     const data = await callEdgeFunction('filter-courses', {
       ...preferences,
-      semester,
-      keyword: semester,
-    }, semester);
+      semester: term.season,
+      termYear: term.year,
+      level: term.level,
+      keyword: term.season,
+    }, term);
 
     return NextResponse.json(data, { headers: corsHeaders() });
   } catch (error) {

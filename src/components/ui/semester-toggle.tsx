@@ -59,7 +59,7 @@ export function SemesterToggle({ currentSemester, onSemesterChange, className }:
         style={{ zIndex: 1 }}
         aria-pressed={currentSemester === 'fall'}
       >
-        Fall 2025
+        Fall 2026
       </button>
       <button
         ref={winterRef}
@@ -73,7 +73,7 @@ export function SemesterToggle({ currentSemester, onSemesterChange, className }:
         style={{ zIndex: 1 }}
         aria-pressed={currentSemester === 'winter'}
       >
-        Winter 2026
+        Winter 2027
       </button>
     </div>
   );

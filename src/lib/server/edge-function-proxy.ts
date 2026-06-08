@@ -1,5 +1,7 @@
 import 'server-only';
 
+import type { AcademicTerm } from '@/lib/types/scheduler';
+
 type Semester = 'fall' | 'winter';
 
 function getEdgeFunctionBaseUrl() {
@@ -29,12 +31,14 @@ function getServerAuthHeaders() {
   return headers;
 }
 
-export async function callEdgeFunction<T>(functionName: 'validate-courses' | 'filter-courses', payload: unknown, semester: Semester) {
+export async function callEdgeFunction<T>(functionName: 'validate-courses' | 'filter-courses', payload: unknown, term: AcademicTerm) {
   const response = await fetch(`${getEdgeFunctionBaseUrl()}/${functionName}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'X-Term': semester,
+      'X-Term': term.season,
+      'X-Term-Year': term.year.toString(),
+      'X-Level': term.level,
       ...getServerAuthHeaders(),
     },
     body: JSON.stringify(payload),
