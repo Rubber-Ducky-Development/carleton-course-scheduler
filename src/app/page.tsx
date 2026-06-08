@@ -66,7 +66,9 @@ export default function Home() {
 
         {/* Term Switchers */}
         <div className="max-w-4xl mx-auto mb-6 space-y-3">
-          <AcademicLevelToggle currentLevel={currentLevel} onLevelChange={handleLevelChange} />
+          <div className="flex justify-center">
+            <AcademicLevelToggle currentLevel={currentLevel} onLevelChange={handleLevelChange} />
+          </div>
           <div className="flex justify-center">
             <SemesterToggle
               currentSemester={currentSemester}
