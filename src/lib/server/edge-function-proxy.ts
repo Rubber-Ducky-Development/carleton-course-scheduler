@@ -22,6 +22,8 @@ function getServerAuthHeaders() {
 
   const headers: Record<string, string> = {};
 
+  headers.Authorization = `Bearer ${authKey}`;
+  headers.apikey = authKey;
   headers['x-api-key'] = authKey;
 
   return headers;
