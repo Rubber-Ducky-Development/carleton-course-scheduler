@@ -37,16 +37,16 @@ export function AcademicLevelToggle({ currentLevel, onLevelChange, className }: 
   }, [currentLevel]);
 
   return (
-    <div className={cn('flex items-center rounded-lg bg-[var(--toggle-bg)] min-h-[40px] p-1 relative overflow-hidden', className)}>
+    <div className={cn('flex items-center bg-[var(--toggle-bg)] rounded-lg min-h-[40px] p-1 relative overflow-hidden', className)}>
       <div
         style={{ left: indicatorStyle.left, width: indicatorStyle.width, margin: 0, padding: 0 }}
-        className="absolute top-1 h-[calc(100%-8px)] rounded-md border border-indigo-100 bg-white shadow-sm transition-all duration-300 ease-in-out"
+        className="absolute top-1 h-[calc(100%-8px)] bg-white shadow-sm border border-indigo-100 rounded-md transition-all duration-300 ease-in-out"
       />
       <button
         ref={undergradRef}
         onClick={() => onLevelChange('undergraduate')}
         className={cn(
-          'relative px-4 py-2 text-sm font-medium transition-all duration-200',
+          'px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 relative',
           currentLevel === 'undergraduate' ? 'text-indigo-600' : 'text-gray-600 hover:text-gray-800',
         )}
         style={{ zIndex: 1 }}
@@ -58,7 +58,7 @@ export function AcademicLevelToggle({ currentLevel, onLevelChange, className }: 
         ref={graduateRef}
         onClick={() => onLevelChange('graduate')}
         className={cn(
-          'relative px-4 py-2 text-sm font-medium transition-all duration-200',
+          'px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 relative',
           currentLevel === 'graduate' ? 'text-indigo-600' : 'text-gray-600 hover:text-gray-800',
         )}
         style={{ zIndex: 1 }}
