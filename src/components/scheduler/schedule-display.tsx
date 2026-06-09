@@ -71,7 +71,7 @@ export function ScheduleDisplay() {
           {viewMode === 'calendar' && onlineUnscheduledCourses.length > 0 && (
             <div className="w-full rounded-xl border border-amber-200 bg-amber-50 p-3">
               <p className="text-sm text-amber-900">
-                These courses are online and currently have no set time. Double check whether it is asynchronous or synchronous:
+                Course(s) listed here is/are online and currently have no set time. Double check their scheduling details:
               </p>
               <ul className="mt-2 list-disc pl-5 text-sm text-amber-900">
                 {onlineUnscheduledCourses.map((course) => (
