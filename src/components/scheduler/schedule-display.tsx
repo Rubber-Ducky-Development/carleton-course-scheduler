@@ -71,7 +71,7 @@ export function ScheduleDisplay() {
           {viewMode === 'calendar' && onlineUnscheduledCourses.length > 0 && (
             <div className="w-full rounded-xl border border-amber-200 bg-amber-50 p-3">
               <p className="text-sm text-amber-900">
-                Course(s) listed here is/are online and currently have no set time. Double check their scheduling details:
+                Course(s) listed here is/are online and may not have a set time yet. Details available in List view:
               </p>
               <ul className="mt-2 list-disc pl-5 text-sm text-amber-900">
                 {onlineUnscheduledCourses.map((course) => (
@@ -256,7 +256,9 @@ export function ScheduleDisplay() {
                   <div className="mt-2 grid grid-cols-1 gap-x-6 gap-y-2 text-sm md:grid-cols-2">
                     <div>
                       <span className="font-medium text-indigo-600">Instructor: </span>
-                      {course.instructor || 'No instructor listed'}
+                      {course.instructor
+                        ? (['yes', 'no'].includes(course.instructor.trim().toLowerCase()) ? 'TBD' : course.instructor)
+                        : 'No instructor listed'}
                     </div>
                     <div>
                       <span className="font-medium text-indigo-600">Type: </span>
