@@ -38,6 +38,25 @@ export interface CoursePreference {
     sectionTypes: SectionType[];
 }
 
+export interface ScheduleTime {
+    day: string;
+    start: string;
+    end: string;
+    timeOfDay: TimeOfDay;
+}
+
+export interface ScheduleCourse {
+    courseCode: string;
+    title: string;
+    instructor: string;
+    sectionType: string;
+    times: ScheduleTime[];
+    meetingDateRanges?: string[];
+    matchReason?: string;
+    isRequiredSession?: boolean;
+    requiredFor?: string;
+}
+
 export interface DailyAvailability {
     day: DayOfWeek;
     availableTimes: TimeOfDay[];

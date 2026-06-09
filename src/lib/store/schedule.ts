@@ -7,6 +7,7 @@ export interface ScheduleCourse {
   title: string;
   instructor: string;
   sectionType: string;
+  meetingDateRanges?: string[];
   times: {
     day: string;
     start: string;
