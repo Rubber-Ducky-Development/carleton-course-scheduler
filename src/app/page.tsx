@@ -49,14 +49,14 @@ export default function Home() {
           <img src="/emoji.svg" alt="Termwise emoji" className="w-8 h-8 sm:w-10 sm:h-10" />
         </h1>
         <p className="text-base text-gray-600 max-w-lg mx-auto">
-          Enter your preferences to generate an optimal schedule
+          Set your preferences and generate optimized course schedules. The best matches are ranked first, with multiple alternatives available.
         </p>
       </div>
 
         {/* Notice Banner */}
         <div className="max-w-4xl mx-auto mb-6">
-          <NoticeBanner type="info" title="Termwise Development Update">
-            Development is currently in progress for Fall 2026 and Winter 2027, and Termwise is projected to be updated really soon. Updates will be posted on{' '}
+          <NoticeBanner type="info" title="Termwise Development Update - June 9, 2026">
+            Development is going great. Graduate courses are still buggy. CRN search and RateMyProf integration are in progress. Updates will be posted on{' '}
             <a href="https://www.linkedin.com/in/nathantann/" className="font-medium underline underline-offset-2 hover:text-blue-600" target="_blank" rel="noopener noreferrer">
               LinkedIn
             </a>
