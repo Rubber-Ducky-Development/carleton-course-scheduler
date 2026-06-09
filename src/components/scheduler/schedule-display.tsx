@@ -56,6 +56,16 @@ export function ScheduleDisplay() {
             {currentAlternative !== null ? `Alternative Schedule #${currentAlternative + 1}` : 'Generated Schedule'}
           </h2>
 
+          {hasAlternatives && alternativeSchedules && (
+            <div className="w-full rounded-xl border border-indigo-100 bg-indigo-50/50 p-3">
+              <p className="text-sm text-indigo-700">
+                We&apos;ve generated {alternativeSchedules.length} alternative schedule{alternativeSchedules.length > 1 ? 's' : ''} that might suit your preferences.
+                <br></br>
+                Calendar view may not always show all courses, especially online unscheduled ones. Switch to list view to view all courses.
+              </p>
+            </div>
+          )}
+
           <div className="inline-flex rounded-lg bg-gray-50 p-1 shadow-sm" role="group">
             <Button
               variant={viewMode === 'calendar' ? 'default' : 'outline'}
@@ -272,15 +282,6 @@ export function ScheduleDisplay() {
         </div>
       )}
 
-      {hasAlternatives && alternativeSchedules && (
-        <div className="mt-6 rounded-xl border border-indigo-100 bg-indigo-50/50 p-4">
-          <p className="text-sm text-indigo-700">
-            We&apos;ve generated {alternativeSchedules.length} alternative schedule{alternativeSchedules.length > 1 ? 's' : ''} that might suit your preferences.
-            <br></br>
-            Calendar view may not always show all courses, especially online unscheduled ones. Switch to list view to view all courses.
-          </p>
-        </div>
-      )}
     </div>
   );
 }
