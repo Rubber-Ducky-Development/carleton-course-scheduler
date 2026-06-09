@@ -69,11 +69,11 @@ export function ScheduleDisplay() {
           )}
 
           {viewMode === 'calendar' && onlineUnscheduledCourses.length > 0 && (
-            <div className="w-full rounded-xl border border-amber-200 bg-amber-50 p-3">
-              <p className="text-sm text-amber-900">
+            <div className="w-full rounded-xl border border-amber-200 bg-amber-50 p-3 dark:border-amber-800 dark:bg-amber-950/40">
+              <p className="text-sm text-amber-900 dark:text-amber-100">
                 Course(s) listed here is/are online and may not have a set time yet. Details available in List view:
               </p>
-              <ul className="mt-2 list-disc pl-5 text-sm text-amber-900">
+              <ul className="mt-2 list-disc pl-5 text-sm text-amber-900 dark:text-amber-100">
                 {onlineUnscheduledCourses.map((course) => (
                   <li key={`${course.courseCode}-${course.title}`}>{course.courseCode}: {course.title}</li>
                 ))}
