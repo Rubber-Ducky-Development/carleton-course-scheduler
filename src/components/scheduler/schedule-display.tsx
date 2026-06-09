@@ -68,6 +68,19 @@ export function ScheduleDisplay() {
             </div>
           )}
 
+          {viewMode === 'calendar' && onlineUnscheduledCourses.length > 0 && (
+            <div className="w-full rounded-xl border border-amber-200 bg-amber-50 p-3">
+              <p className="text-sm text-amber-900">
+                These courses are online and currently have no set time. Double check whether it is asynchronous or synchronous:
+              </p>
+              <ul className="mt-2 list-disc pl-5 text-sm text-amber-900">
+                {onlineUnscheduledCourses.map((course) => (
+                  <li key={`${course.courseCode}-${course.title}`}>{course.courseCode}: {course.title}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+
           <div className="inline-flex rounded-lg bg-gray-50 p-1 shadow-sm" role="group">
             <Button
               variant={viewMode === 'calendar' ? 'default' : 'outline'}
@@ -243,19 +256,6 @@ export function ScheduleDisplay() {
                   <div className="mt-2 grid grid-cols-1 gap-x-6 gap-y-2 text-sm md:grid-cols-2">
                     <div>
                       <span className="font-medium text-indigo-600">Instructor: </span>
-
-                  {onlineUnscheduledCourses.length > 0 && (
-                    <div className="mt-6 rounded-xl border border-amber-200 bg-amber-50 p-4">
-                      <p className="text-sm text-amber-900">
-                        These courses are online and currently have no set time. Double check whether it is asynchronous or synchronous:
-                      </p>
-                      <ul className="mt-2 list-disc pl-5 text-sm text-amber-900">
-                        {onlineUnscheduledCourses.map((course) => (
-                          <li key={`${course.courseCode}-${course.title}`}>{course.courseCode}: {course.title}</li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
                       {course.instructor || 'No instructor listed'}
                     </div>
                     <div>
