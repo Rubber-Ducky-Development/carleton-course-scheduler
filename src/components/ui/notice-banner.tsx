@@ -73,18 +73,18 @@ export function NoticeBanner({
   const colors = colorSchemes[type];
   
   return (
-    <div className={`notice-banner px-4 py-3 rounded-lg shadow-sm ${colors.bg} border ${colors.border} relative mb-6 dark:bg-slate-900/80 dark:border-slate-700`}>
+    <div className={`px-4 py-3 rounded-lg shadow-sm ${colors.bg} border ${colors.border} relative mb-6`}>
       <div className="flex items-start">
         <div className="flex-1">
-          {title && <h3 className={`text-sm font-semibold mb-1 ${colors.title} dark:text-slate-100`}>{title}</h3>}
-          <div className={`text-sm ${colors.text} dark:text-slate-200`}>
+          {title && <h3 className={`text-sm font-semibold mb-1 ${colors.title}`}>{title}</h3>}
+          <div className={`text-sm ${colors.text}`}>
             {children}
           </div>
         </div>
         
         {dismissible && (          <button
             onClick={() => setDismissed(true)}
-            className={`ml-3 flex-shrink-0 p-1 rounded-md hover:bg-white/30 transition-colors ${colors.icon} dark:text-slate-300`}
+            className={`ml-3 flex-shrink-0 p-1 rounded-md hover:bg-white/30 transition-colors ${colors.icon}`}
             aria-label="Dismiss"
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

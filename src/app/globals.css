@@ -210,34 +210,6 @@ body {
   background: #1e293b;
 }
 
-/* Dark mode notice banner */
-.dark .notice-banner {
-  background: #0f172a;
-  border-color: #334155;
-  color: #f1f5f9;
-}
-
-/* Dark mode notice banner specific overrides */
-.dark .bg-gradient-to-r.from-amber-50.to-yellow-50 {
-  background: #78716c !important;
-}
-
-.dark .border-amber-200 {
-  border-color: #fde047 !important;
-}
-
-.dark .text-amber-800 {
-  color: #fef08a !important;
-}
-
-.dark .text-amber-900 {
-  color: #fefce8 !important;
-}
-
-.dark .text-amber-600 {
-  color: #fde047 !important;
-}
-
 /* Dark mode radio buttons */
 .dark input[type="radio"] {
   background: #1e293b;
