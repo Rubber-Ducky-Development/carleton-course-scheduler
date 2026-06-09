@@ -175,11 +175,11 @@ const normalizeDayName = (day: string) => {
   const token = day.trim();
   const lower = token.toLowerCase();
 
-  if (lower === 'sun' || lower === 'sunday' || lower === 'u') return 'Sunday';
+  if (lower === 'sun' || lower === 'sunday' || lower === 'su' || lower === 'u') return 'Sunday';
   if (lower === 'mon' || lower === 'monday') return 'Monday';
   if (lower === 'tue' || lower === 'tues' || lower === 'tuesday' || lower === 'tu' || lower === 't') return 'Tuesday';
   if (lower === 'wed' || lower === 'wednesday' || lower === 'w') return 'Wednesday';
-  if (lower === 'thu' || lower === 'thur' || lower === 'thurs' || lower === 'thursday' || lower === 'r' || lower === 'h') return 'Thursday';
+  if (lower === 'thu' || lower === 'thur' || lower === 'thurs' || lower === 'thursday' || lower === 'th' || lower === 'r' || lower === 'h') return 'Thursday';
   if (lower === 'fri' || lower === 'friday' || lower === 'f') return 'Friday';
   if (lower === 'sat' || lower === 'saturday' || lower === 's') return 'Saturday';
 
