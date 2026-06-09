@@ -171,6 +171,21 @@ const dayMap: { [key: string]: number } = {
   'Saturday': 6
 };
 
+const normalizeDayName = (day: string) => {
+  const token = day.trim();
+  const lower = token.toLowerCase();
+
+  if (lower === 'sun' || lower === 'sunday' || lower === 'u') return 'Sunday';
+  if (lower === 'mon' || lower === 'monday') return 'Monday';
+  if (lower === 'tue' || lower === 'tues' || lower === 'tuesday' || lower === 'tu' || lower === 't') return 'Tuesday';
+  if (lower === 'wed' || lower === 'wednesday' || lower === 'w') return 'Wednesday';
+  if (lower === 'thu' || lower === 'thur' || lower === 'thurs' || lower === 'thursday' || lower === 'r' || lower === 'h') return 'Thursday';
+  if (lower === 'fri' || lower === 'friday' || lower === 'f') return 'Friday';
+  if (lower === 'sat' || lower === 'saturday' || lower === 's') return 'Saturday';
+
+  return token;
+};
+
 // Create a base date for the week
 const getBaseDate = () => {
   const now = new Date();
@@ -229,7 +244,7 @@ export function CalendarView({ courses }: CalendarViewProps) {
       // Handle each time slot for the course
       for (const time of course.times) {
         // Get the day number (0-6, where 0 is Monday for our implementation)
-        const dayNumber = dayMap[time.day];
+        const dayNumber = dayMap[normalizeDayName(time.day)];
         if (dayNumber === undefined) continue;
         
         // Parse start and end times
