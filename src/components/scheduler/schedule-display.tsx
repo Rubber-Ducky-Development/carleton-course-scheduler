@@ -328,7 +328,7 @@ export function ScheduleDisplay() {
                         ? course.title.substring(course.courseCode.length).trim().replace(/^:?\s*/, '')
                         : course.title}
                     </h3>
-                    {course.requiredFor && /tut|tutorial/i.test(course.sectionType) && (
+                    {course.requiredFor && course.isRequiredSession && (
                       <span className="shrink-0 rounded-full border border-amber-300 bg-amber-100 px-2 py-1 text-xs font-medium text-amber-900">
                         Required for {course.requiredFor}
                       </span>
