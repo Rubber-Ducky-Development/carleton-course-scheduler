@@ -322,11 +322,18 @@ export function ScheduleDisplay() {
             <Card key={index} className="overflow-hidden transition-shadow hover:shadow-md">
               <div className="border-l-4" style={{ borderColor: stringToColor(course.courseCode) }}>
                 <div className="p-4">
-                  <h3 className="text-lg font-semibold text-gray-900">
-                    {course.courseCode}: {course.title.startsWith(course.courseCode)
-                      ? course.title.substring(course.courseCode.length).trim().replace(/^:?\s*/, '')
-                      : course.title}
-                  </h3>
+                  <div className="flex items-start justify-between gap-2">
+                    <h3 className="text-lg font-semibold text-gray-900">
+                      {course.courseCode}: {course.title.startsWith(course.courseCode)
+                        ? course.title.substring(course.courseCode.length).trim().replace(/^:?\s*/, '')
+                        : course.title}
+                    </h3>
+                    {course.requiredFor && /tut|tutorial/i.test(course.sectionType) && (
+                      <span className="shrink-0 rounded-full border border-amber-300 bg-amber-100 px-2 py-1 text-xs font-medium text-amber-900">
+                        Required for {course.requiredFor}
+                      </span>
+                    )}
+                  </div>
                   <div className="mt-2 grid grid-cols-1 gap-x-6 gap-y-2 text-sm md:grid-cols-2">
                     <div>
                       <span className="font-medium text-indigo-600">Instructor: </span>
