@@ -7,6 +7,81 @@ import { Select } from "@/components/ui/select";
 import { useScheduleStore } from "@/lib/store/schedule";
 import { CalendarView } from './calendar-view';
 
+const calendarDayLookup: Record<string, string> = {
+  sun: 'Sunday',
+  sunday: 'Sunday',
+  su: 'Sunday',
+  u: 'Sunday',
+  mon: 'Monday',
+  monday: 'Monday',
+  tue: 'Tuesday',
+  tues: 'Tuesday',
+  tuesday: 'Tuesday',
+  tu: 'Tuesday',
+  t: 'Tuesday',
+  wed: 'Wednesday',
+  wednesday: 'Wednesday',
+  w: 'Wednesday',
+  thu: 'Thursday',
+  thur: 'Thursday',
+  thurs: 'Thursday',
+  thursday: 'Thursday',
+  th: 'Thursday',
+  r: 'Thursday',
+  h: 'Thursday',
+  fri: 'Friday',
+  friday: 'Friday',
+  f: 'Friday',
+  sat: 'Saturday',
+  saturday: 'Saturday',
+  s: 'Saturday',
+};
+
+const calendarDays = new Set(['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']);
+const calendarDayStartInMinutes = 8 * 60;
+const calendarDayEndInMinutes = 22 * 60 + 30;
+
+function normalizeCalendarDay(day: string): string {
+  const token = day.trim().toLowerCase();
+  return calendarDayLookup[token] ?? day.trim();
+}
+
+function parseClockTimeToMinutes(timeStr: string): number | null {
+  const clean = timeStr.trim();
+  const [time, period] = clean.split(' ');
+
+  if (!time || !period) return null;
+
+  const [hoursPart, minutesPart] = time.split(':');
+  const hours = Number.parseInt(hoursPart, 10);
+  const minutes = Number.parseInt(minutesPart, 10);
+
+  if (Number.isNaN(hours) || Number.isNaN(minutes)) return null;
+  if (period !== 'AM' && period !== 'PM') return null;
+
+  let normalizedHours = hours;
+  if (period === 'PM' && normalizedHours !== 12) normalizedHours += 12;
+  if (period === 'AM' && normalizedHours === 12) normalizedHours = 0;
+
+  return normalizedHours * 60 + minutes;
+}
+
+function isCourseVisibleInCalendar(course: { times: { day: string; start: string; end: string }[] }): boolean {
+  return course.times.some((time) => {
+    const normalizedDay = normalizeCalendarDay(time.day);
+    if (!calendarDays.has(normalizedDay)) return false;
+
+    const startMinutes = parseClockTimeToMinutes(time.start);
+    const endMinutes = parseClockTimeToMinutes(time.end);
+    if (startMinutes === null || endMinutes === null) return false;
+    if (endMinutes <= startMinutes) return false;
+
+    const clampedStart = Math.max(startMinutes, calendarDayStartInMinutes);
+    const clampedEnd = Math.min(endMinutes, calendarDayEndInMinutes);
+    return clampedEnd > clampedStart;
+  });
+}
+
 export function ScheduleDisplay() {
   const {
     schedules,
@@ -43,8 +118,7 @@ export function ScheduleDisplay() {
 
   const displaySchedule = getCurrentSchedule();
   const hasAlternatives = Boolean(alternativeSchedules && alternativeSchedules.length > 0);
-  const onlineUnscheduledCourses = (displaySchedule ?? []).filter((course) =>
-    course.times.length === 0 && course.sectionType.toLowerCase().includes('online'));
+  const nonCalendarCourses = (displaySchedule ?? []).filter((course) => !isCourseVisibleInCalendar(course));
 
   const handleSelectAlternative = (index: number | null) => {
     setCurrentAlternative(index);
@@ -63,18 +137,18 @@ export function ScheduleDisplay() {
               <p className="text-sm text-indigo-700">
                 We&apos;ve generated {alternativeSchedules.length} alternative schedule{alternativeSchedules.length > 1 ? 's' : ''} that might suit your preferences.
                 <br></br>
-                Calendar view may not always show all courses, especially online unscheduled ones. Switch to list view to view all courses.
+                Calendar view may not always show all courses. Switch to list view to view all courses.
               </p>
             </div>
           )}
 
-          {viewMode === 'calendar' && onlineUnscheduledCourses.length > 0 && (
+          {viewMode === 'calendar' && nonCalendarCourses.length > 0 && (
             <div className="w-full rounded-xl border border-amber-200 bg-amber-50 p-3 dark:border-amber-800 dark:bg-amber-950/40">
               <p className="text-sm text-amber-900 dark:text-amber-100">
-                Course(s) listed here is/are online and may not have a set time yet. Details available in List view:
+                Some courses cannot be displayed in Calendar view (for example online, unknown, or unscheduled sections). Details available in List view:
               </p>
               <ul className="mt-2 list-disc pl-5 text-sm text-amber-900 dark:text-amber-100">
-                {onlineUnscheduledCourses.map((course) => (
+                {nonCalendarCourses.map((course) => (
                   <li key={`${course.courseCode}-${course.title}`}>{course.courseCode}: {course.title}</li>
                 ))}
               </ul>
