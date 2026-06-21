@@ -56,7 +56,7 @@ export default function Home() {
         {/* Notice Banner */}
         <div className="max-w-4xl mx-auto mb-6">
           <NoticeBanner type="info" title="Termwise Development Update - June 21 2026">
-            Development is going great. CRN search and RateMyProf integration are in progress. As the academic year has not even started, scheduler does not take account for if a course is full. An update for that will come later in the year. Updates will be posted on{' '}
+            Development is going great. CRN search, professor autocomplete, and RateMyProf integration are in progress. As the academic year has not even started, scheduler does not take account for if a course is full. An update for that will come later in the year. Updates will be posted on{' '}
             <a href="https://www.linkedin.com/in/nathantann/" className="font-medium underline underline-offset-2 hover:text-blue-600" target="_blank" rel="noopener noreferrer">
               LinkedIn
             </a>
